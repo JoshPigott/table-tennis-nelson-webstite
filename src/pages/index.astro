@@ -1,9 +1,31 @@
+---
+const strapiUrl = (import.meta.env.STRAPI_URL || 'http://localhost:1337').replace(/\/+$/, '');
+const response = await fetch(`${strapiUrl}/api/home-page`).catch(() => null);
+const home = response?.ok ? (await response.json()).data : null;
+const siteName = home?.siteName || 'Table Tennis Nelson';
+---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Table Tennis Nelson</title>
+    <title>{siteName}</title>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <h1>{home?.heading || siteName}</h1>
+      {home?.introduction && <p>{home.introduction}</p>}
+      {home?.aboutText && (
+        <section>
+          <h2>{home.aboutHeading || 'About'}</h2>
+          <p>{home.aboutText}</p>
+        </section>
+      )}
+    </main>
+  </body>
 </html>
+
+<style>
+  body { font-family: system-ui, sans-serif; line-height: 1.6; }
+  main { max-width: 42rem; margin: 3rem auto; padding: 0 1rem; }
+</style>
