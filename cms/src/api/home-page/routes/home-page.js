@@ -1,0 +1,9 @@
+'use strict';
+
+const { factories } = require('@strapi/strapi');
+
+module.exports = factories.createCoreRouter('api::home-page.home-page', {
+  config: {
+    find: { auth: false },
+  },
+});

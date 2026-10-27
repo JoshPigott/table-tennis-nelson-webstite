@@ -2,3 +2,13 @@ node_modules/
 dist/
 .astro/
 plan/
+.env
+cms/.tmp/
+cms/.strapi/
+cms/.strapi-updater.json
+cms/.strapi-cloud.json
+cms/.swc-cache/
+cms/build/
+cms/types/generated/
+cms/public/uploads/*
+!cms/public/uploads/.gitkeep

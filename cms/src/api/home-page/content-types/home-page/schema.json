@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Home page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "siteName": { "type": "string", "required": true, "default": "Table Tennis Nelson" },
+    "heading": { "type": "string", "required": true, "default": "Welcome to Table Tennis Nelson" },
+    "introduction": { "type": "text", "required": true },
+    "aboutHeading": { "type": "string", "required": true, "default": "About the club" },
+    "aboutText": { "type": "text", "required": true }
+  }
+}
