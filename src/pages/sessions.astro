@@ -1,0 +1,414 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const email = 'tabletennisnelson@outlook.com';
+type Session = {
+  title: string;
+  time: string;
+  description: string;
+  terms?: boolean;
+  items?: string[];
+  contact?: boolean;
+};
+
+const days: { name: string; sessions: Session[] }[] = [
+  {
+    name: 'Monday',
+    sessions: [
+      {
+        title: 'Morning Social Table Tennis',
+        time: '9:00am – 12:00pm',
+        description: 'A relaxed and friendly session for all abilities.',
+        items: ['Bats and balls provided', 'Morning tea included'],
+      },
+      {
+        title: 'Junior Coaching & Play',
+        time: '3:30pm – 5:00pm',
+        description: 'Structured coaching and games for young players. Great for juniors aged 5 to 16.',
+      },
+    ],
+  },
+  {
+    name: 'Tuesday',
+    sessions: [{
+      title: 'Evening Play',
+      time: '6:30pm – 9:00pm',
+      description: 'Open to all players.',
+      items: ['Social play', 'Practice matches', 'Competitive opportunities'],
+    }],
+  },
+  {
+    name: 'Wednesday',
+    sessions: [
+      {
+        title: 'Morning Social & Competitive Play',
+        time: '9:00am – 12:00pm',
+        description: 'A mix of social games and top-table challenges.',
+      },
+      {
+        title: 'Evening Play',
+        time: '6:30pm – 9:00pm',
+        description: 'Open for practice, coaching, and social play.',
+      },
+    ],
+  },
+  {
+    name: 'Thursday',
+    sessions: [
+      {
+        title: 'Para Power',
+        time: '4:00pm – 5:00pm',
+        terms: true,
+        description: 'An inclusive session for people with physical or intellectual impairments.',
+      },
+      {
+        title: 'Competitive Night',
+        time: '6:30pm Start',
+        terms: true,
+        description: 'Competitive match play for players looking to challenge themselves.',
+        contact: true,
+      },
+    ],
+  },
+  {
+    name: 'Friday',
+    sessions: [
+      {
+        title: 'Morning Social Table Tennis',
+        time: '9:00am – 12:00pm',
+        description: 'Friendly social play with morning tea provided.',
+      },
+      {
+        title: "Ping Pong Parkinson's",
+        time: '1:00pm – 2:30pm',
+        terms: true,
+        description: "A supportive programme for people living with Parkinson's Disease.",
+      },
+      {
+        title: 'Junior Coaching & Play',
+        time: '3:30pm – 5:00pm',
+        description: 'Structured coaching and games for young players. Great for juniors aged 5 to 16.',
+      },
+    ],
+  },
+  {
+    name: 'Saturday',
+    sessions: [{
+      title: 'Weekend Table Tennis',
+      time: '9:30am – 12:00pm',
+      description: 'A mix of:',
+      items: ['Social play', 'Coaching', 'Junior development', 'Competitive practice'],
+    }],
+  },
+  {
+    name: 'Sunday',
+    sessions: [{
+      title: 'Weekend Table Tennis',
+      time: '9:30am – 12:00pm',
+      description: 'A relaxed session featuring:',
+      items: ['Social play', 'Coaching', 'Junior development', 'Competitive practice'],
+    }],
+  },
+];
+---
+
+<SiteLayout title="Weekly Programme | Table Tennis Nelson" description="Weekly table tennis sessions at Table Tennis Nelson.">
+  <section class="programme" aria-labelledby="programme-title">
+    <div class="wrap">
+      <h1 id="programme-title">Weekly Programme</h1>
+
+      <div class="day-grid">
+        {days.map((day) => (
+          <article class="day-card">
+            <div class="card-heading"><h2>{day.name}</h2></div>
+
+            <ul class="preview">
+              {day.sessions.map((session) => (
+                <li>
+                  <span class="time">{session.time}</span>
+                  <span class="name">{session.title}</span>
+                  {session.terms && <span class="term-note">School Terms Only</span>}
+                </li>
+              ))}
+            </ul>
+
+            <details>
+              <summary>
+                <span class="show-label">More info<span class="sr-only"> about {day.name}</span></span>
+                <span class="hide-label">Less info<span class="sr-only"> about {day.name}</span></span>
+                <span class="toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="details">
+                {day.sessions.map((session) => (
+                  <section class="session-detail">
+                    <h3>{session.title}</h3>
+                    <p>{session.description}</p>
+                    {session.items && <ul>{session.items.map((item) => <li>{item}</li>)}</ul>}
+                    {session.contact && (
+                      <p class="contact">For more information, email: <a href={`mailto:${email}`}>{email}</a></p>
+                    )}
+                  </section>
+                ))}
+              </div>
+            </details>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .programme {
+    padding-block: clamp(3rem, 6vw, 5rem);
+    background: var(--pale-blue);
+  }
+
+  .wrap {
+    width: min(100% - 3rem, 1200px);
+    margin-inline: auto;
+  }
+
+  h1, h2, h3, p {
+    margin-top: 0;
+  }
+
+  h1, h2, h3 {
+    line-height: 1.1;
+    letter-spacing: -.04em;
+  }
+
+  h1 {
+    margin-bottom: 2.5rem;
+    font-size: clamp(2.7rem, 5vw, 4.5rem);
+  }
+
+  .day-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+
+  .day-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1.5px solid var(--blue);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(23, 59, 104, .13);
+  }
+
+  .card-heading {
+    padding: 1.3rem 1.5rem;
+    color: var(--navy);
+  }
+
+  h2 {
+    margin-bottom: 0;
+    font-size: 1.8rem;
+  }
+
+  .preview {
+    margin: 0;
+    padding: .45rem 1.5rem;
+    list-style: none;
+  }
+
+  .preview li {
+    display: grid;
+    grid-template-columns: 7.2rem minmax(0, 1fr);
+    gap: .25rem .8rem;
+    padding-block: .9rem;
+  }
+
+  .preview li + li {
+    border-top: 1px solid var(--soft-blue);
+  }
+
+  .time {
+    color: var(--blue-dark);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .name {
+    font-size: 1.03rem;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .term-note {
+    grid-column: 2;
+    color: var(--muted);
+    font-size: .88rem;
+  }
+
+  details {
+    margin-top: auto;
+    border-top: 1px solid var(--soft-blue);
+  }
+
+  summary {
+    display: flex;
+    min-height: 64px;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding-inline: 1.5rem;
+    color: var(--blue-dark);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .hide-label, details[open] .show-label {
+    display: none;
+  }
+
+  details[open] .hide-label {
+    display: inline;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .toggle-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+
+  .toggle-icon::before, .toggle-icon::after {
+    content: '';
+    position: absolute;
+    top: 11px;
+    left: 4px;
+    width: 16px;
+    height: 2px;
+    background: var(--blue-dark);
+  }
+
+  .toggle-icon::after {
+    transform: rotate(90deg);
+  }
+
+  details[open] .toggle-icon::after {
+    display: none;
+  }
+
+  summary:hover .toggle-icon::before, summary:hover .toggle-icon::after {
+    background: var(--blue-dark);
+  }
+
+  summary:focus-visible {
+    outline: none;
+  }
+
+  summary:focus-visible .toggle-icon {
+    outline: 3px solid var(--navy);
+    outline-offset: 3px;
+  }
+
+  .details {
+    padding: 0 1.5rem 1.2rem;
+  }
+
+  .session-detail + .session-detail {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--soft-blue);
+  }
+
+  h3 {
+    margin-bottom: .4rem;
+    font-size: 1.1rem;
+  }
+
+  .session-detail p {
+    margin-bottom: 0;
+  }
+
+  .session-detail ul {
+    margin: .7rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .session-detail li + li {
+    margin-top: .25rem;
+  }
+
+  .contact {
+    margin-top: .8rem;
+  }
+
+  .contact a {
+    color: var(--blue-dark);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 950px) {
+    .day-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .programme {
+      padding-block: 2.5rem;
+    }
+
+    .wrap {
+      width: min(100% - 2rem, 1200px);
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    .day-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .card-heading {
+      padding: 1.2rem;
+    }
+
+    .preview {
+      padding-inline: 1.2rem;
+    }
+
+    summary {
+      padding-inline: 1.2rem;
+    }
+
+    .details {
+      padding-inline: 1.2rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .preview li {
+      grid-template-columns: 1fr;
+    }
+
+    .term-note {
+      grid-column: 1;
+    }
+  }
+</style>

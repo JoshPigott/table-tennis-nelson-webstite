@@ -1,0 +1,81 @@
+---
+const { title, description } = Astro.props;
+const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
+---
+
+<!doctype html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {description && <meta name="description" content={description} />}
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/" aria-label="Table Tennis Nelson home">Table Tennis <strong>Nelson</strong></a>
+        <nav aria-label="Main navigation">
+          <a class="sessions-link" href="/sessions/">Sessions</a>
+        </nav>
+      </div>
+    </header>
+
+    <main><slot /></main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <span>© {new Date().getFullYear()} Table Tennis Nelson</span>
+        <div>
+          <a href="mailto:tabletennisnelson@outlook.com">Email us</a>
+          <a href={facebook} target="_blank" rel="noopener noreferrer">Find us on Facebook <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(:root) {
+    --navy: #173b68;
+    --blue: #0878bd;
+    --blue-dark: #075d96;
+    --paper: #ffffff;
+    --pale-blue: #f0f6fb;
+    --soft-blue: #dcebf6;
+    --muted: #486078;
+  }
+  :global(*) { box-sizing: border-box; }
+  :global(html) { scroll-behavior: smooth; scrollbar-gutter: stable; }
+  :global(body) { min-height: 100vh; margin: 0; display: flex; flex-direction: column; background: var(--paper); color: var(--navy); font-family: Arial, Helvetica, sans-serif; line-height: 1.55; }
+  :global(a) { color: inherit; }
+  :global(a:focus-visible), :global(button:focus-visible) { outline: 3px solid var(--blue-dark); outline-offset: 4px; }
+  main { flex: 1; }
+  .wrap { width: min(100% - 3rem, 1200px); margin-inline: auto; }
+  .header-inner, .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+  .site-header { border-bottom: 1px solid var(--soft-blue); background: var(--paper); }
+  .header-inner { min-height: 84px; }
+  .brand { display: flex; align-items: center; gap: .3rem; text-decoration: none; font-size: 1.1rem; font-weight: 600; letter-spacing: -.04em; white-space: nowrap; }
+  .brand strong { font-weight: 600; }
+  .sessions-link { display: inline-flex; min-height: 40px; align-items: center; padding: .4rem .9rem; border: 1px solid var(--blue); border-radius: 6px; color: var(--blue-dark); font-size: .9rem; font-weight: 700; text-decoration: none; }
+  .sessions-link:hover { background: var(--pale-blue); }
+  footer { background: var(--navy); color: #fff; }
+  .footer-inner { min-height: 98px; font-size: .85rem; }
+  .footer-inner div { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
+  footer a { text-decoration: none; font-size: .92rem; font-weight: 700; }
+  footer a:hover { color: var(--soft-blue); }
+  @media (max-width: 780px) { .header-inner { min-height: 68px; } }
+  @media (max-width: 600px) {
+    .wrap { width: min(100% - 2rem, 1200px); }
+    .header-inner { min-height: 64px; }
+    .brand { font-size: 1.13rem; }
+    .footer-inner { align-items: flex-start; flex-direction: column; justify-content: center; gap: .8rem; padding-block: 1.5rem; }
+    .footer-inner div { flex-wrap: wrap; gap: .75rem 1.5rem; }
+  }
+  @media (max-width: 380px) {
+    .header-inner { gap: .5rem; }
+    .brand { font-size: .95rem; }
+    .sessions-link { padding-inline: .65rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; } }
+</style>
