@@ -37,35 +37,29 @@ const weekdays = [
   <section class="fees" aria-labelledby="fees-title">
     <div class="wrap">
       <h2 id="fees-title">Fees</h2>
+      <p id="fees-status" role="status">Loading fees…</p>
 
-      <div class="fee-layout">
+      <div class="fee-layout" hidden>
         <div class="fee-options">
           <div>
             <h3>Casual play</h3>
-            <p class="option-price"><strong>$5</strong> per session</p>
+            <p class="option-price"><strong id="casual-price"></strong> <span id="casual-unit"></span></p>
           </div>
           <div class="bank-transfer">
             <h3>Bank transfer</h3>
             <dl>
-              <div><dt>Account name</dt><dd>Table Tennis Nelson</dd></div>
-              <div><dt>Account number</dt><dd>03-1354-0287189-00</dd></div>
+              <div><dt>Account name</dt><dd id="bank-name"></dd></div>
+              <div><dt>Account number</dt><dd id="bank-number"></dd></div>
             </dl>
           </div>
         </div>
 
         <div class="term-fees">
-          <h3>Term fees <small>13 weeks</small></h3>
-          <dl class="fee-list">
-            <div><dt>Seniors (65+) &amp; Community Services Card holders</dt><dd>$40</dd></div>
-            <div><dt>Adults</dt><dd>$60</dd></div>
-            <div><dt>Juniors</dt><dd>$25</dd></div>
-            <div><dt>Two or more juniors from the same family</dt><dd>$40</dd></div>
-          </dl>
+          <h3>Term fees <small id="term-length"></small></h3>
+          <dl class="fee-list" id="term-fee-list"></dl>
 
           <h3 class="annual-heading">Annual membership</h3>
-          <dl class="fee-list">
-            <div><dt>Seniors (65+) &amp; Community Services Card holders</dt><dd>$150</dd></div>
-          </dl>
+          <dl class="fee-list" id="annual-fee-list"></dl>
         </div>
       </div>
     </div>
@@ -80,6 +74,17 @@ const weekdays = [
     schoolTermsOnly?: boolean;
     highlights?: string | null;
     contactEmail?: string | null;
+  };
+
+  type FeeItem = { label: string; price: string };
+  type Fees = {
+    annualFees: FeeItem[];
+    termFees: FeeItem[];
+    termLength: string;
+    bankAccountName: string;
+    bankAccountNumber: string;
+    casualPrice: string;
+    casualUnit: string;
   };
 
   const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -166,6 +171,57 @@ const weekdays = [
       .catch((error) => {
         if (status) status.textContent = 'Sessions are unavailable right now. Please try again later.';
         console.warn('Could not load sessions from Strapi:', error);
+      });
+  }
+
+  const feesStatus = document.querySelector<HTMLElement>('#fees-status');
+
+  function renderFeeList(id: string, items: FeeItem[]) {
+    const rows = items.map(({ label, price }) => {
+      const row = document.createElement('div');
+      const name = document.createElement('dt');
+      const amount = document.createElement('dd');
+      name.textContent = label;
+      amount.textContent = price;
+      row.append(name, amount);
+      return row;
+    });
+    document.getElementById(id)?.replaceChildren(...rows);
+  }
+
+  function renderFees(data: Fees) {
+    const filled = (value: unknown) => typeof value === 'string' && value.trim().length > 0;
+    const validItems = (items: unknown): items is FeeItem[] =>
+      Array.isArray(items) && items.length > 0 && items.every((item) => filled(item?.label) && filled(item?.price));
+
+    if (!data || !validItems(data.annualFees) || !validItems(data.termFees) ||
+      ![data.termLength, data.bankAccountName, data.bankAccountNumber, data.casualPrice, data.casualUnit].every(filled)) {
+      throw new Error('Strapi returned incomplete fees');
+    }
+
+    renderFeeList('annual-fee-list', data.annualFees);
+    renderFeeList('term-fee-list', data.termFees);
+    document.getElementById('term-length')!.textContent = data.termLength;
+    document.getElementById('bank-name')!.textContent = data.bankAccountName;
+    document.getElementById('bank-number')!.textContent = data.bankAccountNumber;
+    document.getElementById('casual-price')!.textContent = data.casualPrice;
+    document.getElementById('casual-unit')!.textContent = data.casualUnit;
+    document.querySelector('.fee-layout')?.removeAttribute('hidden');
+    if (feesStatus) feesStatus.hidden = true;
+  }
+
+  if (!cmsUrl) {
+    if (feesStatus) feesStatus.textContent = 'Fees are unavailable right now. Please try again later.';
+  } else {
+    fetch(new URL('/api/fee-schedule?populate=*', cmsUrl), { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Strapi returned ${response.status}`);
+        return response.json();
+      })
+      .then(({ data }) => renderFees(data))
+      .catch((error) => {
+        if (feesStatus) feesStatus.textContent = 'Fees are unavailable right now. Please try again later.';
+        console.warn('Could not load fees from Strapi:', error);
       });
   }
 </script>
@@ -387,6 +443,7 @@ const weekdays = [
     grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
     gap: clamp(2rem, 5vw, 5rem);
   }
+  .fee-layout[hidden] { display: none; }
   .fee-options { display: grid; align-content: start; gap: 2rem; }
   .fee-options > div + div { padding-top: 1.5rem; border-top: 1px solid var(--soft-blue); }
   .option-price { margin: .5rem 0 0; color: var(--muted); }
@@ -400,15 +457,14 @@ const weekdays = [
   .term-fees h3 small { margin-left: .5rem; color: var(--muted); font-size: .9rem; font-weight: 400; }
   .term-fees .annual-heading { margin-top: 1.5rem; }
   .fee-list { margin: 0; }
-  .fee-list div {
+  .fee-list :global(div) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 1rem;
     padding: .75rem 0;
     border-bottom: 1px solid var(--soft-blue);
   }
-  .fee-list dt small { color: var(--muted); font-size: .9rem; }
-  .fee-list dd { margin: 0; font-weight: 800; white-space: nowrap; }
+  .fee-list :global(dd) { margin: 0; font-weight: 800; white-space: nowrap; }
 
   .bank-transfer dl {
     display: grid;
@@ -433,7 +489,7 @@ const weekdays = [
     .fee-layout { grid-template-columns: 1fr; gap: 2rem; }
     .fee-options { display: contents; }
     .term-fees { padding: 1.5rem 0 0; border-top: 1px solid var(--soft-blue); border-left: 0; }
-    .term-fees > .fee-list:last-child div { border-bottom: 0; }
+    .term-fees > .fee-list:last-child :global(div) { border-bottom: 0; }
     .bank-transfer { grid-row: 3; }
   }
 

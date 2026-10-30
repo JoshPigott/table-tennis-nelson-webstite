@@ -1,0 +1,19 @@
+{
+  "kind": "singleType",
+  "collectionName": "fee_schedules",
+  "info": {
+    "singularName": "fee-schedule",
+    "pluralName": "fee-schedules",
+    "displayName": "Fees"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "annualFees": { "type": "component", "repeatable": true, "component": "fees.item" },
+    "termFees": { "type": "component", "repeatable": true, "component": "fees.item" },
+    "termLength": { "type": "string", "required": true },
+    "bankAccountName": { "type": "string", "required": true },
+    "bankAccountNumber": { "type": "string", "required": true },
+    "casualPrice": { "type": "string", "required": true },
+    "casualUnit": { "type": "string", "required": true }
+  }
+}
