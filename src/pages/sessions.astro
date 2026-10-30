@@ -8,7 +8,7 @@ const weekdays = [
 ] as const;
 ---
 
-<SiteLayout title="Weekly Programme | Table Tennis Nelson" description="Weekly table tennis sessions at Table Tennis Nelson.">
+<SiteLayout title="Sessions & Fees | Table Tennis Nelson" description="See weekly table tennis sessions and playing fees at Table Tennis Nelson.">
   <section class="programme" aria-labelledby="programme-title">
     <div class="wrap">
       <h1 id="programme-title">Sessions</h1>
@@ -30,6 +30,43 @@ const weekdays = [
             </details>
           </article>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="fees" aria-labelledby="fees-title">
+    <div class="wrap">
+      <h2 id="fees-title">Fees</h2>
+
+      <div class="fee-layout">
+        <div class="fee-options">
+          <div>
+            <h3>Casual play</h3>
+            <p class="option-price"><strong>$5</strong> per session</p>
+          </div>
+          <div class="bank-transfer">
+            <h3>Bank transfer</h3>
+            <dl>
+              <div><dt>Account name</dt><dd>Table Tennis Nelson</dd></div>
+              <div><dt>Account number</dt><dd>03-1354-0287189-00</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="term-fees">
+          <h3>Term fees <small>13 weeks</small></h3>
+          <dl class="fee-list">
+            <div><dt>Seniors (65+) &amp; Community Services Card holders</dt><dd>$40</dd></div>
+            <div><dt>Adults</dt><dd>$60</dd></div>
+            <div><dt>Juniors</dt><dd>$25</dd></div>
+            <div><dt>Two or more juniors from the same family</dt><dd>$40</dd></div>
+          </dl>
+
+          <h3 class="annual-heading">Annual membership</h3>
+          <dl class="fee-list">
+            <div><dt>Seniors (65+) &amp; Community Services Card holders</dt><dd>$150</dd></div>
+          </dl>
+        </div>
       </div>
     </div>
   </section>
@@ -122,7 +159,6 @@ const weekdays = [
           throw new Error('Strapi returned an incomplete schedule');
         }
         document.querySelector('#programme-title')!.textContent = data.heading;
-        document.title = `${data.heading} | Table Tennis Nelson`;
         cards.forEach((card) => renderDay(card, data[card.dataset.day!]));
         document.querySelector('.day-grid')?.removeAttribute('hidden');
         if (status) status.hidden = true;
@@ -341,10 +377,64 @@ const weekdays = [
     overflow-wrap: anywhere;
   }
 
+  .fees { padding-block: clamp(3rem, 6vw, 5rem); }
+  .fees .wrap { max-width: 1100px; }
+  .fees h2 { margin-bottom: 2.5rem; font-size: clamp(2.7rem, 5vw, 4rem); }
+  .fees h3 { margin: 0; font-size: 1.3rem; line-height: 1.25; }
+
+  .fee-layout {
+    display: grid;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+  .fee-options { display: grid; align-content: start; gap: 2rem; }
+  .fee-options > div + div { padding-top: 1.5rem; border-top: 1px solid var(--soft-blue); }
+  .option-price { margin: .5rem 0 0; color: var(--muted); }
+  .option-price strong { color: var(--blue-dark); font-size: clamp(2.7rem, 5vw, 3.8rem); line-height: 1; }
+
+  .term-fees {
+    padding-left: clamp(2rem, 4vw, 4rem);
+    border-left: 1px solid var(--soft-blue);
+  }
+  .term-fees h3 { margin-bottom: .8rem; }
+  .term-fees h3 small { margin-left: .5rem; color: var(--muted); font-size: .9rem; font-weight: 400; }
+  .term-fees .annual-heading { margin-top: 1.5rem; }
+  .fee-list { margin: 0; }
+  .fee-list div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--soft-blue);
+  }
+  .fee-list dt small { color: var(--muted); font-size: .9rem; }
+  .fee-list dd { margin: 0; font-weight: 800; white-space: nowrap; }
+
+  .bank-transfer dl {
+    display: grid;
+    gap: .75rem;
+    margin: .8rem 0 0;
+  }
+  .bank-transfer dt { color: var(--muted); font-size: .9rem; }
+  .bank-transfer dd {
+    margin: .2rem 0 0;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
   @media (max-width: 950px) {
     .day-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+  }
+
+  @media (max-width: 700px) {
+    .fee-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .fee-options { display: contents; }
+    .term-fees { padding: 1.5rem 0 0; border-top: 1px solid var(--soft-blue); border-left: 0; }
+    .term-fees > .fee-list:last-child div { border-bottom: 0; }
+    .bank-transfer { grid-row: 3; }
   }
 
   @media (max-width: 600px) {
@@ -380,6 +470,7 @@ const weekdays = [
     .details {
       padding-inline: 1.2rem;
     }
+
   }
 
   @media (max-width: 360px) {
