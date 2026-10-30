@@ -1,0 +1,22 @@
+{
+  "kind": "singleType",
+  "collectionName": "session_schedules",
+  "info": {
+    "singularName": "session-schedule",
+    "pluralName": "session-schedules",
+    "displayName": "Sessions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": { "type": "string", "required": true, "default": "Weekly Programme" },
+    "monday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "tuesday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "wednesday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "thursday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "friday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "saturday": { "type": "component", "repeatable": true, "component": "schedule.session" },
+    "sunday": { "type": "component", "repeatable": true, "component": "schedule.session" }
+  }
+}
