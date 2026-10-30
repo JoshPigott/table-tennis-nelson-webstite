@@ -18,3 +18,5 @@ Open <http://localhost:1337/admin>, then choose **Content Manager → Single Typ
 The sessions page loads current content from Strapi when it opens. In local development it uses `http://localhost:1337`. For a deployed website, set `PUBLIC_STRAPI_URL` to the public Strapi address when building Astro. Strapi must be reachable from visitors' browsers. If it is unavailable, the page shows an error message instead of session listings.
 
 Strapi stores edits in its database (`cms/.tmp/data.db` locally), which is not committed to Git. A new database has no sessions until you enter and save them in Strapi.
+
+Stop Strapi before switching Git branches. You can switch back without making a database copy if you do not start Strapi on the other branch. If you plan to start Strapi on a branch that adds, removes, or changes content types, copy `cms/.tmp/data.db` first; Strapi may change the database tables to match that branch.
