@@ -17,6 +17,7 @@ const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
         <a class="brand" href="/" aria-label="Table Tennis Nelson home">Table Tennis <strong>Nelson</strong></a>
         <nav aria-label="Main navigation">
           <a class="sessions-link" href="/sessions/">Sessions &amp; fees</a>
+          <a class="sessions-link" href="/coaching/">Coaching</a>
         </nav>
       </div>
     </header>
@@ -57,6 +58,7 @@ const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
   .header-inner { min-height: 84px; }
   .brand { display: flex; align-items: center; gap: .3rem; text-decoration: none; font-size: 1.1rem; font-weight: 600; letter-spacing: -.04em; white-space: nowrap; }
   .brand strong { font-weight: 600; }
+  nav { display: flex; flex-wrap: wrap; gap: .5rem; }
   .sessions-link { display: inline-flex; min-height: 40px; align-items: center; padding: .4rem .9rem; border: 1px solid var(--blue); border-radius: 6px; color: var(--blue-dark); font-size: .9rem; font-weight: 700; text-decoration: none; }
   .sessions-link:hover { background: var(--pale-blue); }
   footer { background: var(--navy); color: #fff; }
@@ -67,8 +69,9 @@ const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
   @media (max-width: 780px) { .header-inner { min-height: 68px; } }
   @media (max-width: 600px) {
     .wrap { width: min(100% - 2rem, 1200px); }
-    .header-inner { min-height: 64px; }
+    .header-inner { min-height: 64px; flex-wrap: wrap; gap: .4rem; padding-block: .65rem; }
     .brand { font-size: 1.13rem; }
+    nav { width: 100%; }
     .footer-inner { align-items: flex-start; flex-direction: column; justify-content: center; gap: .8rem; padding-block: 1.5rem; }
     .footer-inner div { flex-wrap: wrap; gap: .75rem 1.5rem; }
   }
