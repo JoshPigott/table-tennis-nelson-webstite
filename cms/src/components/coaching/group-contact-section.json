@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_coaching_group_contact_sections",
+  "info": { "displayName": "Group coaching contacts" },
+  "attributes": {
+    "introduction": { "type": "string" },
+    "contacts": { "type": "component", "repeatable": true, "component": "coaching.group-contact" }
+  }
+}

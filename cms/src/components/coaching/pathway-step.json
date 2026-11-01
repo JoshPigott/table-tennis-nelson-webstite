@@ -1,0 +1,11 @@
+{
+  "collectionName": "components_coaching_pathway_steps",
+  "info": { "displayName": "Pathway step" },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "linkText": { "type": "string" },
+    "linkUrl": { "type": "string" },
+    "afterLink": { "type": "text" }
+  }
+}

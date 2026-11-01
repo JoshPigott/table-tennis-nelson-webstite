@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_coaching_group_contacts",
+  "info": { "displayName": "Group contact" },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "phone": { "type": "string", "required": true }
+  }
+}

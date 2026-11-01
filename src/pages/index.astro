@@ -1,15 +1,16 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import { Image } from 'astro:assets';
+import photo from '../assets/home/table-tennis-nelson-action.webp';
+import welcomePhoto from '../assets/home/table-tennis-women-playing.webp';
 
-const photo = '/table-tennis-nelson-action.webp';
-const welcomePhoto = '/table-tennis-women-playing.webp';
 const directions = 'https://www.google.com/maps/search/?api=1&query=Table+Tennis+Nelson%2C+142+Saxton+Road%2C+Stoke%2C+Nelson';
 ---
 
 <SiteLayout title="Table Tennis Nelson | Come play" description="Come play table tennis in Nelson. All ages and abilities are welcome at Table Tennis Nelson, Saxton Field Stadium.">
       <section class="hero" aria-labelledby="hero-title">
         <figure>
-          <img src={photo} alt="People playing table tennis together at Table Tennis Nelson" fetchpriority="high" />
+          <Image src={photo} alt="People playing table tennis together at Table Tennis Nelson" widths={[640, 960, 1280, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />
         </figure>
         <div class="wrap hero-copy">
           <h1 id="hero-title">Play table tennis in Nelson.</h1>
@@ -26,7 +27,7 @@ const directions = 'https://www.google.com/maps/search/?api=1&query=Table+Tennis
           <p>You don’t need your own bat or ball. Just bring non-marking shoes and come ready to play.</p>
           <a class="button primary" href="https://www.sporty.co.nz/ttnelson/" target="_blank" rel="noopener noreferrer">See playing times <span aria-hidden="true">↗</span></a>
         </div>
-        <img class="welcome-image" src={welcomePhoto} alt="Two women smiling as they play table tennis together" loading="lazy" />
+        <Image class="welcome-image" src={welcomePhoto} alt="Two women smiling as they play table tennis together" widths={[360, 600, 900, 1200]} sizes="(max-width: 780px) calc(100vw - 2rem), (max-width: 1250px) 40vw, 500px" loading="lazy" />
       </section>
 
       <section class="location" id="find-us" aria-labelledby="location-title">
@@ -66,7 +67,7 @@ const directions = 'https://www.google.com/maps/search/?api=1&query=Table+Tennis
   .visit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .78fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; padding-block: clamp(4rem, 7vw, 7rem); }
   .visit p { max-width: 540px; color: var(--muted); font-size: 1.13rem; }
   .visit .button { margin-top: 1rem; }
-  .welcome-image { display: block; width: 100%; aspect-ratio: 3 / 2; border-radius: 6px; object-fit: cover; }
+  .welcome-image { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; border-radius: 6px; object-fit: cover; }
   .location { padding-block: clamp(4rem, 7vw, 6rem); background: var(--pale-blue); }
   .location h2 { margin-bottom: 1.2rem; }
   .location-layout { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); }
