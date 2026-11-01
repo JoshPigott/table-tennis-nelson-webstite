@@ -17,17 +17,17 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
   <p class="wrap coaching-status" id="coaching-status" role="status">Loading coaching information…</p>
 
   <section class="wrap section" aria-labelledby="after-school-title" hidden>
-    <div class="coaching-overview">
-      <div>
+    <div class="coaching-overview after-school-overview">
+      <div class="after-school-heading">
         <h2 id="after-school-title" data-field="groupHeading"></h2>
         <p class="section-intro" id="group-introduction" data-field="groupIntroduction"></p>
-    
+      </div>
+      <div class="after-school-schedule">
         <div class="session-grid" id="coaching-sessions"></div>
-    
         <p class="contact-line" id="group-contact" hidden></p>
       </div>
       <Image
-        class="coaching-photo"
+        class="coaching-photo after-school-photo"
         src={juniorGroup}
         alt="Junior players gathered around table tennis tables during a group session"
         widths={[360, 540, 720, 1080]}
@@ -171,6 +171,10 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
     .contact-line { margin: 2rem 0 0; }
     .contact-line :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
     .coaching-overview { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 4vw, 4rem); align-items: stretch; }
+    .after-school-overview { grid-template-areas: 'heading image' 'schedule image'; row-gap: 0; }
+    .after-school-heading { grid-area: heading; }
+    .after-school-schedule { grid-area: schedule; }
+    .after-school-photo { grid-area: image; }
     .coaching-photo { display: block; width: 100%; height: 100%; max-height: 400px; min-height: 0; object-fit: cover; border-radius: 12px; }
     .pathway-intro { margin-bottom: .5rem; }
     .pathway-photo { float: right; width: 42%; height: auto; max-height: none; object-fit: contain; margin: 0 0 1.5rem clamp(2rem, 4vw, 4rem); }
@@ -191,6 +195,8 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
     .pathway[hidden] { display: none; }
     @media (max-width: 800px) {
       .coaching-overview { grid-template-columns: 1fr; }
+      .after-school-overview { grid-template-areas: 'heading' 'image' 'schedule'; gap: 1.5rem; }
+      .after-school-heading .section-intro { margin-bottom: 0; }
       .coaching-photo { width: min(100%, 540px); height: auto; margin-inline: auto; }
       .pathway { display: flex; flex-direction: column; }
       .pathway-intro { order: 1; }
