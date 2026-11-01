@@ -9,29 +9,22 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
 <SiteLayout title="Coaching | Table Tennis Nelson" description="Junior group coaching, individual training, and the junior pathway at Table Tennis Nelson.">
   <header class="page-intro">
     <div class="wrap">
-      <h1>Coaching</h1>
-      <p>There are ways to learn, practise, and take your table tennis further at Table Tennis Nelson.</p>
+      <h1 id="coaching-heading" data-field="pageHeading">Coaching</h1>
+      <p id="coaching-introduction" data-field="pageIntroduction" hidden></p>
     </div>
   </header>
 
-  <section class="wrap section" aria-labelledby="after-school-title">
+  <p class="wrap coaching-status" id="coaching-status" role="status">Loading coaching information…</p>
+
+  <section class="wrap section" aria-labelledby="after-school-title" hidden>
     <div class="coaching-overview">
       <div>
-        <h2 id="after-school-title">After school coaching</h2>
-        <p class="section-intro">Junior group coaching runs during the school term.</p>
+        <h2 id="after-school-title" data-field="groupHeading"></h2>
+        <p class="section-intro" id="group-introduction" data-field="groupIntroduction"></p>
     
-        <div class="session-grid">
-          <div class="session">
-            <h3>Monday</h3>
-            <p>3:45pm–5:00pm</p>
-          </div>
-          <div class="session">
-            <h3>Friday</h3>
-            <p>3:30pm–4:30pm</p>
-          </div>
-        </div>
+        <div class="session-grid" id="coaching-sessions"></div>
     
-        <p class="contact-line">For individual coaching, contact <a href="tel:02108408652">Mark on 021 084 08652</a> or <a href="tel:0284208071">John on 028 420 8071</a>.</p>
+        <p class="contact-line" id="group-contact" hidden></p>
       </div>
       <Image
         class="coaching-photo"
@@ -44,16 +37,16 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
     </div>
   </section>
 
-  <section class="individual" aria-labelledby="individual-title">
+  <section class="individual" aria-labelledby="individual-title" hidden>
     <div class="wrap coaching-overview">
       <div>
-        <h2 id="individual-title">Individual coaching with John Jary</h2>
-        <p class="section-intro">New to table tennis? John offers free one-to-one coaching to help you get started.</p>
+        <h2 id="individual-title" data-field="individualHeading"></h2>
+        <p class="section-intro" id="individual-introduction" data-field="individualIntroduction"></p>
         <div class="individual-details">
-          <p>Morning, afternoon, or evening, seven days a week except Sunday evening. Book in advance if you can: choose a day and time, and John can be at the stadium within 10 minutes.</p>
-          <div class="contact-details">
-            <p><strong>Text preferred</strong><br /><a href="sms:0284208071">028 420 8071</a></p>
-            <p><strong>Email</strong><br /><a href="mailto:johnjohnjary@gmail.com">johnjohnjary@gmail.com</a></p>
+          <p id="individual-details" data-field="individualDetails"></p>
+          <div class="contact-details" id="individual-contact" hidden>
+            <p id="john-sms-row" hidden><strong>Text preferred</strong><br /><a id="john-sms"></a></p>
+            <p id="john-email-row" hidden><strong>Email</strong><br /><a id="john-email"></a></p>
           </div>
         </div>
         </div>
@@ -68,62 +61,94 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
       </div>
     </section>
   
-    <section class="wrap section pathway" aria-labelledby="pathway-title">
+    <section class="wrap section pathway" aria-labelledby="pathway-title" hidden>
+      <Image
+        class="coaching-photo pathway-photo"
+        src={dimitriBell}
+        alt="Nelson player Dimitri Bell preparing to return a table tennis ball"
+        widths={[360, 540, 720, 1080]}
+        sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px"
+        loading="lazy"
+      />
       <div class="pathway-intro">
-        <div>
-          <h2 id="pathway-title">The junior pathway</h2>
-          <p class="section-intro">A guide to getting started and progressing through the Table Tennis Nelson junior programme.</p>
-        </div>
-        <Image
-          class="coaching-photo"
-          src={dimitriBell}
-          alt="Nelson player Dimitri Bell preparing to return a table tennis ball"
-          widths={[360, 540, 720, 1080]}
-          sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px"
-          loading="lazy"
-        />
+        <h2 id="pathway-title" data-field="pathwayHeading"></h2>
+        <p class="section-intro" id="pathway-introduction" data-field="pathwayIntroduction"></p>
       </div>
   
-      <ol>
-        <li>
-          <h3>Come along and play</h3>
-          <p>Start with Monday after school juniors during the school term, or try a family session on Sunday morning or Wednesday evening.</p>
-        </li>
-        <li>
-          <h3>Try Friday competition</h3>
-          <p>Play in the Friday after school competition during terms 2 and 3.</p>
-        </li>
-        <li>
-          <h3>Watch table tennis</h3>
-          <p>Watch matches and learn from the players on <a href="https://www.youtube.com/WTTGlobal" target="_blank" rel="noopener noreferrer">World Table Tennis</a>.</p>
-        </li>
-        <li>
-          <h3>Consider extra coaching</h3>
-          <p>Email <a href="mailto:tabletennisnelson@outlook.com">Table Tennis Nelson</a> to ask about coaching. Coaches at the stadium include Mark Nalder, Allan Viller, John Jary, Anna King, Dimitri Bell, and Michael Holmes. Coaching can be one to one or in a group of up to four friends. Ask each coach about any fee. Individual coaching can help you develop faster than larger group sessions.</p>
-        </li>
-        <li>
-          <h3>Register with Table Tennis New Zealand</h3>
-          <p>Get familiar with the events on offer.</p>
-        </li>
-        <li>
-          <h3>Enter tournaments</h3>
-          <p>Start with the Nelson Closed, Nelson Open, or Marlborough Open. You could then consider events in Wellington, Otago, Canterbury, and the New Zealand National Championships. Check the <a href="https://tabletennis.org.nz/tournaments/national-tournament-calendar" target="_blank" rel="noopener noreferrer">Table Tennis New Zealand tournament calendar</a> for current events and dates.</p>
-        </li>
-        <li>
-          <h3>Play Thursday competition</h3>
-          <p>Take part in Thursday night competitive play.</p>
-        </li>
-        <li>
-          <h3>Represent Nelson</h3>
-          <p>Play in Nelson representative teams, including the South Island Team Championships and the shield match with Marlborough.</p>
-        </li>
-        <li>
-          <h3>Attend training camps</h3>
-          <p>Work towards selection for the Table Tennis New Zealand South Region training camp and the national training camp.</p>
-        </li>
-      </ol>
+      <ol id="pathway-steps"></ol>
     </section>
   </SiteLayout>
+
+  <script>
+    const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+    const byId = (id: string) => document.getElementById(id)!;
+    const escapeHtml = (value: unknown) => {
+      const element = document.createElement('div');
+      element.textContent = String(value ?? '');
+      return element.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    };
+
+    async function loadCoaching() {
+      try {
+        if (!cmsUrl) throw new Error('Strapi URL is missing');
+        const url = new URL('/api/coaching-page?populate[0]=groupSessions&populate[1]=pathwaySteps&populate[2]=groupContactSection&populate[3]=groupContactSection.contacts', cmsUrl);
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Strapi returned ${response.status}`);
+        const { data } = await response.json();
+        if (!data?.groupSessions?.length || !data?.pathwaySteps?.length) throw new Error('Coaching page is incomplete');
+
+        document.querySelectorAll<HTMLElement>('[data-field]').forEach((element) => {
+          element.textContent = data[element.dataset.field!];
+        });
+
+        byId('coaching-sessions').innerHTML = data.groupSessions
+          .map(({ day, time }: { day: string; time: string }) => `<div class="session"><h3>${escapeHtml(day)}</h3><p>${escapeHtml(time)}</p></div>`)
+          .join('');
+
+        const contacts = data.groupContactSection?.contacts ?? [];
+        if (contacts.length) {
+          byId('group-contact').innerHTML = `${escapeHtml(data.groupContactSection.introduction || '')} ${contacts
+            .map(({ name, phone }: { name: string; phone: string }) => `<a href="tel:${phone.replace(/[^\d+]/g, '')}">${escapeHtml(name)} on ${escapeHtml(phone)}</a>`)
+            .join(' or ')}.`;
+          byId('group-contact').hidden = false;
+        }
+
+        const phone = data.johnPhone?.trim();
+        const email = data.johnEmail?.trim();
+        byId('john-sms-row').hidden = !phone;
+        byId('john-email-row').hidden = !email;
+        byId('individual-contact').hidden = !phone && !email;
+        if (phone) {
+          byId('john-sms').textContent = phone;
+          byId('john-sms').setAttribute('href', `sms:${phone.replace(/[^\d+]/g, '')}`);
+        }
+        if (email) {
+          byId('john-email').textContent = email;
+          byId('john-email').setAttribute('href', `mailto:${email}`);
+        }
+
+        byId('pathway-steps').innerHTML = data.pathwaySteps.map((step: { title: string; description: string; linkText?: string; linkUrl?: string; afterLink?: string }) => {
+          const url = step.linkUrl || '';
+          const link = step.linkText && /^(https?:\/\/|mailto:)/i.test(url)
+            ? `<a href="${escapeHtml(url)}"${/^https?:\/\//i.test(url) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHtml(step.linkText)}</a>${escapeHtml(step.afterLink)}`
+            : '';
+          return `<li><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.description)}${link}</p></li>`;
+        }).join('');
+
+        byId('coaching-introduction').hidden = false;
+        for (const id of ['after-school-title', 'individual-title', 'pathway-title']) {
+          document.querySelector(`section[aria-labelledby="${id}"]`)!.removeAttribute('hidden');
+        }
+        byId('coaching-status').hidden = true;
+      } catch (error) {
+        byId('coaching-status').textContent = 'Coaching information is unavailable right now. Please try again later.';
+        console.warn('Could not load coaching page from Strapi:', error);
+      }
+    }
+
+    loadCoaching();
+  </script>
   
   <style>
     .wrap { width: min(100% - 3rem, 1100px); margin-inline: auto; }
@@ -136,28 +161,41 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
     a { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
     .page-intro { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
     .page-intro p { max-width: 42rem; margin-bottom: 0; font-size: 1.2rem; }
+    .coaching-status { margin-block: 3rem; }
     .section { padding-block: clamp(3rem, 6vw, 5rem); }
     .section-intro { max-width: 44rem; margin-bottom: 1.8rem; color: var(--muted); font-size: 1.1rem; }
     .session-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 760px; }
-    .session { padding: 1.5rem; border: 1px solid var(--soft-blue); border-radius: 12px; background: var(--pale-blue); }
-    .session p { margin-bottom: 0; color: var(--blue-dark); font-size: 1.25rem; font-weight: 800; }
+    .session-grid :global(.session) { padding: 1.5rem; border: 1px solid var(--soft-blue); border-radius: 12px; background: var(--pale-blue); }
+    .session-grid :global(.session h3) { margin: 0 0 .35rem; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; }
+    .session-grid :global(.session p) { margin: 0; color: var(--blue-dark); font-size: 1.25rem; font-weight: 800; line-height: 1.6; }
     .contact-line { margin: 2rem 0 0; }
-    .coaching-overview, .pathway-intro { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 4vw, 4rem); align-items: stretch; }
+    .contact-line :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
+    .coaching-overview { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 4vw, 4rem); align-items: stretch; }
     .coaching-photo { display: block; width: 100%; height: 100%; max-height: 400px; min-height: 0; object-fit: cover; border-radius: 12px; }
-    .pathway-intro { margin-bottom: 2.5rem; }
+    .pathway-intro { margin-bottom: .5rem; }
+    .pathway-photo { float: right; width: 42%; height: auto; max-height: none; object-fit: contain; margin: 0 0 1.5rem clamp(2rem, 4vw, 4rem); }
     .pathway-intro .section-intro { margin-bottom: 0; }
     .individual { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
     .individual-details { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     .individual-details > p { margin-bottom: 0; }
     .contact-details { display: flex; flex-wrap: wrap; gap: 1rem 2rem; }
+    .contact-details[hidden], .contact-line[hidden] { display: none; }
     .contact-details p { margin-bottom: 0; }
-    .pathway ol { max-width: 850px; margin: 0; padding-left: 2rem; }
-    .pathway li { padding: 1.25rem 0 1.25rem .5rem; border-top: 1px solid var(--soft-blue); }
-    .pathway li::marker { color: var(--blue-dark); font-weight: 800; }
-    .pathway li p { margin-bottom: 0; }
+    .pathway ol { margin: 0; padding-left: 2rem; }
+    .pathway ol :global(li) { display: list-item flow-root; padding: 1.25rem 0 1.25rem .5rem; border-top: 1px solid var(--soft-blue); }
+    .pathway ol :global(li:first-child) { padding-top: .75rem; }
+    .pathway ol :global(li::marker) { color: var(--blue-dark); font-weight: 800; }
+    .pathway ol :global(li h3) { margin: 0 0 .35rem; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; }
+    .pathway ol :global(li p) { margin: 0; line-height: 1.6; }
+    .pathway ol :global(li a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
+    .pathway[hidden] { display: none; }
     @media (max-width: 800px) {
-      .coaching-overview, .pathway-intro { grid-template-columns: 1fr; }
+      .coaching-overview { grid-template-columns: 1fr; }
       .coaching-photo { width: min(100%, 540px); height: auto; margin-inline: auto; }
+      .pathway { display: flex; flex-direction: column; }
+      .pathway-intro { order: 1; }
+      .pathway-photo { order: 2; float: none; width: min(100%, 540px); margin: 0 auto 1.5rem; }
+      .pathway ol { order: 3; }
     }
     @media (max-width: 600px) {
       .wrap { width: min(100% - 2rem, 1100px); }

@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_coaching_sessions",
+  "info": { "displayName": "Coaching session" },
+  "attributes": {
+    "day": { "type": "string", "required": true },
+    "time": { "type": "string", "required": true }
+  }
+}

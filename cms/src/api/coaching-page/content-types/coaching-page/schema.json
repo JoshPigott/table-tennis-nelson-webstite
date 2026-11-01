@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "coaching_pages",
+  "info": {
+    "singularName": "coaching-page",
+    "pluralName": "coaching-pages",
+    "displayName": "Coaching page"
+  },
+  "config": {
+    "layouts": {
+      "edit": [
+        [{ "name": "pageHeading", "size": 6 }, { "name": "pageIntroduction", "size": 6 }],
+        [{ "name": "groupHeading", "size": 6 }, { "name": "groupIntroduction", "size": 6 }],
+        [{ "name": "groupSessions", "size": 12 }],
+        [{ "name": "groupContactSection", "size": 12 }],
+        [{ "name": "individualHeading", "size": 6 }, { "name": "individualIntroduction", "size": 6 }],
+        [{ "name": "individualDetails", "size": 12 }],
+        [{ "name": "johnPhone", "size": 6 }, { "name": "johnEmail", "size": 6 }],
+        [{ "name": "pathwayHeading", "size": 6 }, { "name": "pathwayIntroduction", "size": 6 }],
+        [{ "name": "pathwaySteps", "size": 12 }]
+      ]
+    }
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "pageHeading": { "type": "string", "required": true },
+    "pageIntroduction": { "type": "text", "required": true },
+    "groupHeading": { "type": "string", "required": true },
+    "groupIntroduction": { "type": "text", "required": true },
+    "groupSessions": { "type": "component", "repeatable": true, "component": "coaching.session" },
+    "groupContactSection": { "type": "component", "repeatable": false, "component": "coaching.group-contact-section" },
+    "individualHeading": { "type": "string", "required": true },
+    "individualIntroduction": { "type": "text", "required": true },
+    "individualDetails": { "type": "text", "required": true },
+    "johnPhone": { "type": "string" },
+    "johnEmail": { "type": "email" },
+    "pathwayHeading": { "type": "string", "required": true },
+    "pathwayIntroduction": { "type": "text", "required": true },
+    "pathwaySteps": { "type": "component", "repeatable": true, "component": "coaching.pathway-step" }
+  }
+}
