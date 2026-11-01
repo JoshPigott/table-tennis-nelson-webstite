@@ -1,0 +1,72 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { Image } from 'astro:assets';
+import playersAtTable from '../assets/ping-pong-parkinsons/players-at-table.png';
+import groupPhoto from '../assets/ping-pong-parkinsons/nelson-group-hero.png';
+---
+
+<SiteLayout
+  title="Ping Pong Parkinson’s | Table Tennis Nelson"
+  description="Join Table Tennis Nelson's Ping Pong Parkinson's sessions on Friday afternoons during school terms."
+>
+  <header class="hero">
+    <Image class="hero-image" src={groupPhoto} alt="Table Tennis Nelson players and supporters standing together in the club hall" loading="eager" fetchpriority="high" />
+    <div class="wrap hero-title"><h1><span>Ping Pong</span> <span>Parkinson’s</span></h1></div>
+  </header>
+
+  <article class="wrap content">
+    <h2>Come along and play</h2>
+    <p class="lead">Have a diagnosis of Parkinson’s disease? Come and give table tennis a go with us.</p>
+    <p>Our Ping Pong Parkinson’s sessions are a relaxed way to play, meet people, and enjoy an afternoon at the club. Tea, coffee, and a lounge space are available too.</p>
+
+    <p><strong>When:</strong> Friday, 1pm–2:30pm during school terms.</p>
+    <p><strong>Where:</strong> Table Tennis Nelson, Saxton Stadium Complex, 142 Saxton Road. Our entrance is down the side path to the right of the main stadium entrance.</p>
+    <p><strong>Cost:</strong> $5 per session, or $40 for the term.</p>
+    <p><strong>What to bring:</strong> Just yourself. Equipment is provided.</p>
+  </article>
+
+  <section class="contact-band" aria-labelledby="contact-title">
+    <div class="wrap story-row">
+      <div>
+        <h2 id="contact-title">Get in touch</h2>
+        <p>For more information, contact Anna:</p>
+        <p class="contact-links"><a href="tel:+64273463996">027 346 3996</a><br /><a href="mailto:tabletennisnelson@outlook.com">tabletennisnelson@outlook.com</a></p>
+        <p class="learn-more"><a href="https://www.pingpongparkinson.org/why-ping-pong" target="_blank" rel="noopener noreferrer">Why ping pong? Learn more about the game and Parkinson’s ↗</a></p>
+      </div>
+      <Image class="photo" src={playersAtTable} alt="Two players rallying across a table at Table Tennis Nelson" loading="lazy" />
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
+  .hero { position: relative; height: 100svh; min-height: 540px; display: flex; align-items: end; overflow: hidden; background: var(--navy); }
+  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgb(0 0 0 / .72)); }
+  .hero :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .hero-title { position: relative; z-index: 1; padding-bottom: clamp(2rem, 6vw, 5rem); color: white; }
+  .hero-title h1 span { display: block; }
+  .content { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(2rem, 4vw, 3rem); }
+  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; letter-spacing: -.04em; }
+  h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.03em; }
+  p { margin: 0 0 1.25rem; font-size: 1.1rem; line-height: 1.65; }
+  .lead { font-size: 1.25rem; }
+  .content > p { max-width: 45rem; }
+  strong { color: var(--navy); }
+  a { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .contact-band { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
+  .story-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+  .story-row p:last-child { margin-bottom: 0; }
+  .contact-links { line-height: 1.9; }
+  .learn-more { padding-top: 1.25rem; border-top: 1px solid var(--soft-blue); }
+  .photo { display: block; width: 100%; height: auto; border-radius: 12px; }
+  @media (max-width: 650px) {
+    .wrap { width: min(100% - 2rem, 1000px); }
+    .hero { display: block; height: auto; min-height: 0; background: var(--pale-blue); }
+    .hero::after { display: none; }
+    .hero :global(img) { position: static; display: block; height: auto; object-fit: contain; }
+    .hero-title { padding-block: 1.5rem 2rem; color: var(--navy); }
+    .hero-title h1 span { display: inline; }
+    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
+    .story-row { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+</style>
