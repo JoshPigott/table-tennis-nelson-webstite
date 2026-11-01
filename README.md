@@ -19,4 +19,6 @@ The sessions page loads current content from Strapi when it opens. In local deve
 
 Strapi stores edits in its database (`cms/.tmp/data.db` locally), which is not committed to Git. A new database has no sessions until you enter and save them in Strapi.
 
+Photos are kept with the website files and aren't editable through this site's Strapi CMS.
+
 Stop Strapi before switching Git branches. You can switch back without making a database copy if you do not start Strapi on the other branch. If you plan to start Strapi on a branch that adds, removes, or changes content types, copy `cms/.tmp/data.db` first; Strapi may change the database tables to match that branch.
