@@ -1,0 +1,16 @@
+{
+  "kind": "singleType",
+  "collectionName": "ping_pong_parkinsons_pages",
+  "info": {
+    "singularName": "ping-pong-parkinsons-page",
+    "pluralName": "ping-pong-parkinsons-pages",
+    "displayName": "Ping Pong Parkinson's page"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "heroTitleTop": { "type": "string", "required": true },
+    "heroTitleBottom": { "type": "string", "required": true },
+    "mainContent": { "type": "richtext", "required": true },
+    "contactContent": { "type": "richtext" }
+  }
+}

@@ -4,6 +4,7 @@ dist/
 plan/
 .env
 cms/.tmp/
+cms/backups/
 cms/.strapi/
 cms/.strapi-updater.json
 cms/.strapi-cloud.json
