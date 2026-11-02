@@ -1,5 +1,25 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import { getImage } from 'astro:assets';
+import playPhoto from '../assets/home/table-tennis-nelson-action.webp';
+import socialPhoto from '../assets/home/table-tennis-women-playing.webp';
+import juniorPhoto from '../assets/coaching/junior-group.webp';
+import parkinsonsPhoto from '../assets/ping-pong-parkinsons/players-at-table.png';
+import competitionPhoto from '../assets/sessions/thursday-competition.png';
+import wednesdayPhoto from '../assets/sessions/wednesday-morning.png';
+import paraPhoto from '../assets/sessions/para-power.png';
+import morningPhoto from '../assets/sessions/morning-social.jpg';
+
+const sessionPhotos = await Promise.all([playPhoto, socialPhoto, juniorPhoto, parkinsonsPhoto, competitionPhoto, wednesdayPhoto, paraPhoto, morningPhoto].map(
+  (src) => getImage({
+    src,
+    // Keep enough pixels for a 150 × 105 thumbnail on high-density screens,
+    // including wide photos whose sides are cropped by object-fit: cover.
+    width: Math.min(src.width, Math.ceil(Math.max(450, 315 * src.width / src.height))),
+    format: 'webp',
+    quality: 90,
+  })
+));
 
 const weekdays = [
   ['Monday', 'monday'], ['Tuesday', 'tuesday'], ['Wednesday', 'wednesday'],
@@ -14,21 +34,12 @@ const weekdays = [
       <h1 id="programme-title">Sessions</h1>
       <p id="session-status" role="status">Loading sessions…</p>
 
-      <div class="day-grid" hidden>
+      <div class="day-list" hidden data-photos={JSON.stringify(sessionPhotos.map((photo) => photo.src))}>
         {weekdays.map(([name, key]) => (
-          <article class="day-card" data-day={key}>
-            <div class="card-heading"><h2>{name}</h2></div>
-
-            <ul class="preview"></ul>
-            <details>
-              <summary>
-                <span class="show-label">More info<span class="sr-only"> about {name}</span></span>
-                <span class="hide-label">Less info<span class="sr-only"> about {name}</span></span>
-                <span class="toggle-icon" aria-hidden="true"></span>
-              </summary>
-              <div class="details"></div>
-            </details>
-          </article>
+          <section class="day-section" data-day={key} aria-labelledby={`day-${key}`}>
+            <header class="day-heading"><h2 id={`day-${key}`}>{name}</h2><span class="day-count"></span></header>
+            <div class="session-list"></div>
+          </section>
         ))}
       </div>
     </div>
@@ -89,7 +100,7 @@ const weekdays = [
 
   const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
-  const cards = [...document.querySelectorAll<HTMLElement>('.day-card[data-day]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.day-section[data-day]')];
 
   function addText(parent: HTMLElement, tag: 'span' | 'h3' | 'p' | 'li', className: string, value: string) {
     const child = document.createElement(tag);
@@ -99,30 +110,37 @@ const weekdays = [
   }
 
   function renderDay(card: HTMLElement, sessions: Session[]) {
-    const preview = card.querySelector('.preview');
-    const details = card.querySelector('.details');
-    if (!preview || !details) return;
-
-    const previewRows = sessions.map((session) => {
-      const row = document.createElement('li');
-      addText(row, 'span', 'time', session.time);
-      addText(row, 'span', 'name', session.title);
-      if (session.schoolTermsOnly) addText(row, 'span', 'term-note', 'School Terms Only');
-      return row;
-    });
-
-    if (previewRows.length === 0) {
-      const empty = document.createElement('li');
-      empty.textContent = 'No sessions listed';
-      previewRows.push(empty);
-    }
-    preview.replaceChildren(...previewRows);
+    const list = card.querySelector('.session-list');
+    if (!list) return;
+    const count = card.querySelector('.day-count');
+    if (count) count.textContent = `${sessions.length} ${sessions.length === 1 ? 'session' : 'sessions'}`;
 
     const sections = sessions.map((session) => {
-      const section = document.createElement('section');
-      section.className = 'session-detail';
-      addText(section, 'h3', '', session.title);
-      addText(section, 'p', '', session.description);
+      const row = document.createElement('article');
+      row.className = 'session-row';
+      const photos: string[] = JSON.parse(document.querySelector<HTMLElement>('.day-list')!.dataset.photos!);
+      const day = card.dataset.day;
+      const morning = /morning/i.test(session.title);
+      let photoIndex = /parkinson/i.test(session.title) ? 3 : /junior|coaching/i.test(session.title) ? 2 : /social/i.test(session.title) ? 1 : 0;
+      if (day === 'thursday' && /competitive|competition/i.test(session.title)) photoIndex = 4;
+      if (day === 'wednesday' && morning) photoIndex = 5;
+      if (/para\s*power/i.test(session.title)) photoIndex = 6;
+      if ((day === 'monday' || day === 'friday') && morning) photoIndex = 7;
+      const thumbnail = document.createElement('div');
+      thumbnail.className = 'session-thumbnail';
+      const image = document.createElement('img');
+      image.src = photos[photoIndex];
+      if (photoIndex === 4 || photoIndex === 6) image.style.objectPosition = 'center 35%';
+      image.alt = '';
+      image.width = 150;
+      image.height = 105;
+      image.loading = 'lazy';
+      thumbnail.append(image);
+      const section = document.createElement('div');
+      section.className = 'session-content';
+      addText(section, 'span', 'term-note', session.schoolTermsOnly ? 'School terms only' : 'Weekly session');
+      addText(section, 'h3', 'session-title', session.title);
+      addText(section, 'p', 'session-description', session.description);
 
       const highlights = session.highlights?.split(/\r?\n/).map((item) => item.trim()).filter(Boolean) ?? [];
       if (highlights.length > 0) {
@@ -141,11 +159,35 @@ const weekdays = [
         contact.append(link);
         section.append(contact);
       }
-      return section;
+      const timing = document.createElement('div');
+      timing.className = 'session-timing';
+      const timeParts = session.time.split(/\s*[–—−-]\s*/);
+      if (timeParts.length === 2) {
+        timeParts.forEach((part, index) => {
+          const timePart = document.createElement('div');
+          timePart.className = 'time-part';
+          const match = part.trim().match(/^(\d{1,2}(?::\d{2})?)\s*(am|pm)$/i);
+          addText(timePart, 'span', 'time', match ? match[1] : part.trim());
+          addText(timePart, 'span', 'time-period', match ? match[2].toLowerCase() : '');
+          timing.append(timePart);
+          if (index === 0) addText(timing, 'span', 'time-separator', '–');
+        });
+      } else {
+        addText(timing, 'p', 'time', session.time);
+      }
+      timing.setAttribute('aria-label', `Session time: ${session.time}`);
+      row.append(thumbnail, section, timing);
+      return row;
     });
 
-    details.replaceChildren(...sections);
-    card.querySelector('details')?.toggleAttribute('hidden', sessions.length === 0);
+    if (sections.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'empty-day';
+      empty.textContent = 'No sessions listed';
+      list.replaceChildren(empty);
+    } else {
+      list.replaceChildren(...sections);
+    }
   }
 
   const status = document.querySelector<HTMLElement>('#session-status');
@@ -165,7 +207,7 @@ const weekdays = [
         }
         document.querySelector('#programme-title')!.textContent = data.heading;
         cards.forEach((card) => renderDay(card, data[card.dataset.day!]));
-        document.querySelector('.day-grid')?.removeAttribute('hidden');
+        document.querySelector('.day-list')?.removeAttribute('hidden');
         if (status) status.hidden = true;
       })
       .catch((error) => {
@@ -237,201 +279,43 @@ const weekdays = [
     margin-inline: auto;
   }
 
-  h1, h2, .details :global(h3), .details :global(p) {
-    margin-top: 0;
-  }
-
-  h1, h2, .details :global(h3) {
-    line-height: 1.1;
-    letter-spacing: -.04em;
-  }
-
-  h1 {
-    margin-bottom: 2.5rem;
-    font-size: clamp(2.7rem, 5vw, 4.5rem);
-  }
-
-  .day-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.2rem;
-  }
-
-  .day-grid[hidden] {
-    display: none;
-  }
-
-  .day-card {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
-    border: 1.5px solid var(--blue);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 12px 30px rgba(23, 59, 104, .13);
-  }
-
-  .card-heading {
-    padding: 1.3rem 1.5rem;
-    color: var(--navy);
-  }
-
-  h2 {
-    margin-bottom: 0;
-    font-size: 1.8rem;
-  }
-
-  .preview {
-    margin: 0;
-    padding: .45rem 1.5rem;
-    list-style: none;
-  }
-
-  .preview :global(li) {
-    display: grid;
-    grid-template-columns: 7.2rem minmax(0, 1fr);
-    gap: .25rem .8rem;
-    padding-block: .9rem;
-  }
-
-  .preview :global(li + li) {
-    border-top: 1px solid var(--soft-blue);
-  }
-
-  .preview :global(.time) {
-    color: var(--blue-dark);
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1.35;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .preview :global(.name) {
-    font-size: 1.03rem;
-    line-height: 1.35;
-    font-weight: 700;
-  }
-
-  .preview :global(.term-note) {
-    grid-column: 2;
-    color: var(--muted);
-    font-size: .88rem;
-  }
-
-  details {
-    margin-top: auto;
-    border-top: 1px solid var(--soft-blue);
-  }
-
-  summary {
-    display: flex;
-    min-height: 64px;
-    align-items: center;
-    justify-content: space-between;
-    gap: .75rem;
-    padding-inline: 1.5rem;
-    color: var(--blue-dark);
-    font-weight: 700;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .hide-label, details[open] .show-label {
-    display: none;
-  }
-
-  details[open] .hide-label {
-    display: inline;
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-  }
-
-  .toggle-icon {
+  h1, h2 { margin-top: 0; line-height: 1.1; letter-spacing: -.04em; }
+  h1 { margin-bottom: 2.5rem; font-size: clamp(3rem, 6vw, 5rem); }
+  h2 { margin-bottom: 0; font-size: 1.8rem; }
+  .day-list[hidden] { display: none; }
+  .day-section { margin-bottom: 2.5rem; }
+  .day-section:last-child { margin-bottom: 0; }
+  .day-heading { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid #e4e5e7; background: #f7f7f7; }
+  .day-heading h2 { font-size: 1.8rem; letter-spacing: -.04em; }
+  .day-count { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+  .session-list { padding-top: .5rem; }
+  .session-list :global(.session-row) {
+    --row-background: #f7f7f7;
     position: relative;
-    width: 24px;
-    height: 24px;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 190px;
+    align-items: start;
+    gap: 44px;
+    padding: 32px 24px;
+    border-radius: 9px;
+    background: var(--row-background);
   }
-
-  .toggle-icon::before, .toggle-icon::after {
-    content: '';
-    position: absolute;
-    top: 11px;
-    left: 4px;
-    width: 16px;
-    height: 2px;
-    background: var(--blue-dark);
-  }
-
-  .toggle-icon::after {
-    transform: rotate(90deg);
-  }
-
-  details[open] .toggle-icon::after {
-    display: none;
-  }
-
-  summary:hover .toggle-icon::before, summary:hover .toggle-icon::after {
-    background: var(--blue-dark);
-  }
-
-  summary:focus-visible {
-    outline: none;
-  }
-
-  summary:focus-visible .toggle-icon {
-    outline: 3px solid var(--navy);
-    outline-offset: 3px;
-  }
-
-  .details {
-    padding: 0 1.5rem 1.2rem;
-  }
-
-  .details :global(.session-detail + .session-detail) {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--soft-blue);
-  }
-
-  .details :global(h3) {
-    margin-bottom: .4rem;
-    font-size: 1.1rem;
-  }
-
-  .details :global(.session-detail p) {
-    margin-bottom: 0;
-  }
-
-  .details :global(.session-detail ul) {
-    margin: .7rem 0 0;
-    padding-left: 1.25rem;
-  }
-
-  .details :global(.session-detail li + li) {
-    margin-top: .25rem;
-  }
-
-  .details :global(.contact) {
-    margin-top: .8rem;
-  }
-
-  .details :global(.contact a) {
-    color: var(--blue-dark);
-    font-weight: 700;
-    overflow-wrap: anywhere;
-  }
+  .session-list :global(.session-row)::after { content: ''; position: absolute; bottom: 0; left: 24px; right: 24px; height: 1px; background: #e6e7e9; }
+  .session-list :global(.session-thumbnail) { position: relative; width: 150px; height: 105px; border-radius: 7px; overflow: hidden; }
+  .session-list :global(.session-thumbnail img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .session-list :global(.session-content) { min-width: 0; }
+  .session-list :global(.term-note) { display: inline-flex; align-items: center; margin-bottom: 12px; padding: 2px 10px; border-radius: 100px; background: #e6e7e9; color: var(--blue-dark); font-size: .85rem; font-weight: 700; line-height: 1.5; }
+  .session-list :global(.session-title) { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; color: var(--navy); }
+  .session-list :global(.session-description) { max-width: 560px; margin: 0; color: var(--muted); font-size: 1.1rem; line-height: 1.65; }
+  .session-list :global(.session-timing) { display: flex; justify-content: center; gap: 9px; padding-top: 20px; color: var(--blue-dark); }
+  .session-list :global(.time-part) { text-align: center; }
+  .session-list :global(.time), .session-list :global(.time-separator) { display: block; margin: 0; font-size: 1.5rem; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .session-list :global(.time-period) { display: block; margin-top: 5px; font-size: 1rem; }
+  .session-list :global(ul) { margin: 12px 0 0; padding-left: 1.2rem; color: var(--muted); font-size: 1rem; }
+  .session-list :global(li + li) { margin-top: .3rem; }
+  .session-list :global(.contact) { margin: 12px 0 0; color: var(--muted); font-size: 1rem; }
+  .session-list :global(.contact a) { color: var(--blue-dark); font-weight: 700; overflow-wrap: anywhere; text-underline-offset: 3px; }
+  .session-list :global(.empty-day) { margin: 0; padding: 1.5rem; color: var(--muted); }
 
   .fees { padding-block: clamp(3rem, 6vw, 5rem); }
   .fees .wrap { max-width: 1100px; }
@@ -479,12 +363,6 @@ const weekdays = [
     overflow-wrap: anywhere;
   }
 
-  @media (max-width: 950px) {
-    .day-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 700px) {
     .fee-layout { grid-template-columns: 1fr; gap: 2rem; }
     .fee-options { display: contents; }
@@ -493,49 +371,48 @@ const weekdays = [
     .bank-transfer { grid-row: 3; }
   }
 
-  @media (max-width: 600px) {
-    .programme {
-      padding-block: 2.5rem;
-    }
-
-    .wrap {
-      width: min(100% - 2rem, 1200px);
-    }
-
-    h1 {
-      margin-bottom: 2rem;
-    }
-
-    .day-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    .card-heading {
-      padding: 1.2rem;
-    }
-
-    .preview {
-      padding-inline: 1.2rem;
-    }
-
-    summary {
-      padding-inline: 1.2rem;
-    }
-
-    .details {
-      padding-inline: 1.2rem;
-    }
-
+  @media (max-width: 950px) {
+    .session-list :global(.session-row) { grid-template-columns: 120px minmax(0, 1fr) 165px; gap: 24px; }
+    .session-list :global(.session-thumbnail) { width: 120px; height: 90px; }
+    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.375rem; }
   }
-
-  @media (max-width: 360px) {
-    .preview :global(li) {
-      grid-template-columns: 1fr;
+  @media (max-width: 700px) {
+    .day-section { margin-bottom: 2rem; }
+    .day-heading { padding: 1rem 0; }
+    .day-heading h2 { font-size: 1.5rem; }
+    .session-list { display: grid; gap: 1rem; padding-top: 1rem; }
+    .session-list :global(.session-row) {
+      --row-background: #fff;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'photo' 'title' 'time' 'note' 'description';
+      gap: 1.25rem 1rem;
+      padding: 1.25rem;
+      border: 1px solid var(--soft-blue);
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgb(23 59 104 / .04);
     }
-
-    .preview :global(.term-note) {
-      grid-column: 1;
-    }
+    .session-list :global(.session-row)::after { display: none; }
+    .session-list :global(.session-thumbnail) { grid-area: photo; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 8px; }
+    .session-list :global(.session-content) { display: contents; }
+    .session-list :global(.session-timing) { grid-area: time; align-self: center; align-items: baseline; justify-content: flex-start; flex-wrap: wrap; gap: .35rem; min-width: 0; padding: 0; }
+    .session-list :global(.time-part) { display: flex; align-items: baseline; gap: .2rem; }
+    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.25rem; white-space: normal; overflow-wrap: anywhere; }
+    .session-list :global(.time-period) { margin: 0; font-size: .85rem; }
+    .session-list :global(.term-note) { grid-area: note; justify-self: start; margin: 0; background: var(--pale-blue); }
+    .session-list :global(.session-title) { grid-area: title; margin: 0; line-height: 1.3; }
+    .session-list :global(.session-description) { grid-area: description; font-size: 1rem; line-height: 1.6; }
+    .session-list :global(.contact) { padding-top: .85rem; border-top: 1px solid var(--soft-blue); font-size: .95rem; }
+  }
+  @media (max-width: 600px) {
+    .programme { padding-block: 2.5rem; }
+    .wrap { width: min(100% - 2rem, 1200px); }
+    h1 { margin-bottom: 2rem; }
+    .fees h2 { margin-bottom: 1.5rem; }
+    .term-fees h3 small { display: block; margin: .35rem 0 0; }
+    .fee-list :global(div) { gap: .75rem; }
+  }
+  @media (max-width: 420px) {
+    .session-list :global(.session-row) { gap: 1rem; padding: 1rem; }
+    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.1rem; }
   }
 </style>
