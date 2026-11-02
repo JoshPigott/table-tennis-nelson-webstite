@@ -9,82 +9,83 @@ import sessionPhoto from '../assets/para-power/players-together.png';
   title="Para Power – Table Tennis | Table Tennis Nelson"
   description="Join Para Power table tennis for people with a physical or intellectual impairment. Thursdays, 4–5pm during school terms at Saxton Field, Nelson. $25 per term."
 >
-  <header class="hero">
-    <Image src={playerPhoto} alt="Wheelchair table tennis players enjoying a game at the Nelson stadium" widths={[640, 960, 1280, 1600, 2048]} sizes="100vw" loading="eager" fetchpriority="high" quality={90} />
-    <div class="wrap hero-title"><h1><span>Para Power</span> <span>Table Tennis</span></h1></div>
-  </header>
+  <p class="wrap page-status" id="para-power-status" role="status">Loading Para Power information...</p>
+  <div id="para-power-page" hidden>
+    <header class="hero">
+      <Image src={playerPhoto} alt="Wheelchair table tennis players enjoying a game at the Nelson stadium" widths={[640, 960, 1280, 1600, 2048]} sizes="100vw" loading="eager" fetchpriority="high" quality={90} />
+      <div class="wrap hero-title"><h1 id="hero-title"></h1></div>
+    </header>
 
-  <article class="wrap content">
-        <h2>Table tennis for every ability</h2>
-        <p class="lead">Table Tennis Nelson is committed to offering opportunities for people of any ability or age to play table tennis.</p>
-        <p>Para Power is a session for people with a physical or intellectual impairment. Come along and join us, with coaching support to help you learn to play table tennis in a conventional or adapted way.</p>
-
-  <section class="session-details" aria-labelledby="session-details-title">
-    <h2 id="session-details-title">Session details</h2>
-    <dl>
-      <div><dt>When</dt><dd>Thursday, 4:00 pm – 5:00 pm <span>During school term time</span></dd></div>
-      <div><dt>Where</dt><dd>Table Tennis Nelson Stadium <span>Saxton Field, Nelson</span></dd></div>
-      <div><dt>Cost</dt><dd>$25 per term</dd></div>
-    </dl>
-  </section>
-
-
-  </article>
-
-  <section class="contact-band" aria-labelledby="contact-title">
-    <div class="wrap story-row">
-      <div class="contact-copy">
-  <section class="benefits" aria-labelledby="benefits-title">
-        <h2 id="benefits-title">Benefits</h2>
-        <ul>
-          <li>Exercise the brain and body.</li>
-          <li>Build your confidence and skill with each session.</li>
-          <li>Enjoy a year-round recreation option, rain or shine.</li>
-          <li>Make great social connections and build whanaungatanga.</li>
-          <li>Explore Para Table Tennis competitive options, with training camps and tournaments across New Zealand.</li>
-        </ul>
-  </section>
-    <p class="thanks">A huge thank you to Table Tennis New Zealand (TTNZ) and Sport Tasman’s Tū Manawa Fund for supporting these sessions.</p>
-        <div class="contact-details">
-    <h2 id="contact-title">Any questions?</h2>
-    <p>Email <a href="mailto:tabletennisnelson@outlook.com">tabletennisnelson@outlook.com</a><br />or phone <a href="tel:+64273463996">027 346 3996</a>.</p>
-        </div>
+    <article class="wrap content" id="main-content"></article>
+    <section class="contact-band" id="contact-band" aria-label="Benefits, contact and more information">
+      <div class="wrap story-row">
+        <div class="contact-copy" id="contact-content"></div>
+        <Image class="photo" src={sessionPhoto} alt="Two players smiling together beside the table tennis tables at the Nelson stadium" widths={[320, 640, 960]} sizes="(max-width: 650px) calc(100vw - 2rem), 476px" loading="lazy" quality={90} />
       </div>
-      <Image class="photo" src={sessionPhoto} alt="Two players smiling together beside the table tennis tables at the Nelson stadium" widths={[320, 640, 960]} sizes="(max-width: 650px) calc(100vw - 2rem), 476px" loading="lazy" quality={90} />
-    </div>
-  </section>
+    </section>
+  </div>
 </SiteLayout>
+
+<script>
+  import MarkdownIt from 'markdown-it';
+
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+  const byId = (id: string) => document.getElementById(id)!;
+  const markdown = new MarkdownIt({ linkify: true });
+  markdown.disable('image');
+
+  async function loadPage() {
+    try {
+      if (!cmsUrl) throw new Error('Strapi URL is missing');
+      const url = new URL('/api/para-power-page', cmsUrl);
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Strapi returned ${response.status}`);
+      const { data } = await response.json();
+      if (!data?.heroTitle || !data?.mainContent) {
+        throw new Error('Para Power page is incomplete');
+      }
+
+      byId('hero-title').textContent = data.heroTitle.trim().replace(/\s+(Table Tennis)$/i, '\n$1');
+      byId('main-content').innerHTML = markdown.render(data.mainContent);
+      byId('contact-band').hidden = !data.contactContent?.trim();
+      byId('contact-content').innerHTML = markdown.render(data.contactContent || '');
+
+      byId('para-power-page').hidden = false;
+      byId('para-power-status').hidden = true;
+    } catch (error) {
+      byId('para-power-status').textContent = 'Para Power information is unavailable right now. Please try again later.';
+      console.warn('Could not load Para Power page from Strapi:', error);
+    }
+  }
+
+  loadPage();
+</script>
 
 <style>
   .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  h1, h2, p { margin-top: 0; }
-  h1, h2 { line-height: 1.15; letter-spacing: -.04em; }
-  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; }
-  h1 span { display: block; }
-  h2 { margin-bottom: 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); }
-  p, li { font-size: 1.1rem; line-height: 1.65; }
-  p { margin-bottom: 1.25rem; }
-  .lead { font-size: 1.25rem; }
-  a { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .page-status { padding-block: 3rem; }
+  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; letter-spacing: -.04em; white-space: pre-line; }
+  .content :global(h2), .contact-copy :global(h2) { margin: 2.5rem 0 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.03em; }
+  .content :global(h2:first-child), .contact-copy :global(h2:first-child) { margin-top: 0; }
+  .content :global(h3), .contact-copy :global(h3) { margin: 1.5rem 0 .75rem; font-size: 1.4rem; }
+  .content :global(p), .contact-copy :global(p) { margin: 0 0 1.25rem; font-size: 1.1rem; line-height: 1.65; }
+  .content :global(p:first-of-type) { font-size: 1.25rem; }
+  .content :global(a), .contact-copy :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
   .hero { position: relative; height: 80svh; min-height: 480px; display: flex; align-items: end; overflow: hidden; background: var(--navy); }
   .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgb(0 0 0 / .72)); }
   .hero :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
   .hero-title { position: relative; z-index: 1; padding-bottom: clamp(2rem, 6vw, 5rem); color: white; }
   .content { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(2rem, 4vw, 3rem); }
-  .content > p { max-width: 45rem; }
+  .content :global(p) { max-width: 45rem; }
   .contact-band { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
   .story-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
-  .story-row p:last-child { margin-bottom: 0; }
+  .contact-copy :global(p:last-child) { margin-bottom: 0; }
   .photo { display: block; width: 100%; height: auto; border-radius: 12px; }
-  .session-details, .contact-details { margin-top: 2.5rem; }
-  dl { margin: 0; }
-  dl > div { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: 1rem; margin-bottom: 1rem; }
-  dt { font-size: 1.1rem; font-weight: 700; }
-  dd { margin: 0; font-size: 1.1rem; }
-  dd span { display: block; margin-top: .3rem; font-size: 1rem; font-weight: 400; color: var(--muted); }
-  ul { margin: 0; padding-left: 1.25rem; }
-  li + li { margin-top: .8rem; }
-  .thanks { max-width: 45rem; margin-top: 2rem; color: var(--muted); }
+  .content :global(ul), .contact-copy :global(ul) { margin: 0 0 2rem; padding-left: 1.25rem; }
+  .content :global(li), .contact-copy :global(li) { font-size: 1.1rem; line-height: 1.65; }
+  .content :global(li + li), .contact-copy :global(li + li) { margin-top: .8rem; }
+  .contact-band[hidden] { display: none; }
   @media (max-width: 650px) {
     .wrap { width: min(100% - 2rem, 1000px); }
     .contact-band { background: var(--paper); padding-top: 0; }
@@ -93,7 +94,6 @@ import sessionPhoto from '../assets/para-power/players-together.png';
     .hero :global(img) { position: static; display: block; height: auto; object-fit: contain; }
     .hero-title { padding-block: 1.5rem 2rem; color: var(--navy); }
     h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
-    h1 span { display: inline; }
     .story-row { grid-template-columns: 1fr; gap: 1.5rem; }
   }
 </style>
