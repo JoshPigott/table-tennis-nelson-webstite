@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "code_of_conduct_pages",
+  "info": {
+    "singularName": "code-of-conduct-page",
+    "pluralName": "code-of-conduct-pages",
+    "displayName": "Code of conduct page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Code of conduct"
+    },
+    "introduction": {
+      "type": "text",
+      "default": "Help us keep Table Tennis Nelson safe, friendly and enjoyable for everyone."
+    },
+    "content": {
+      "type": "richtext",
+      "required": true,
+      "default": "## Stadium rules\n\n1. Non-marking footwear only or bare feet.\n\n2. Do not jump over or lean on the barriers. Pull open a gap to walk through and then close it again.\n\n3. Do not hit the bat on the tables.\n\n4. No running inside the stadium.\n\n5. Please use the handrail if going up or down the stairs.\n\n6. If the emergency alarm goes off, everyone is to meet in the main car park on the southern end of the main entrance to the stadium.\n\n7. No food or soft drinks in the playing areas. Please use water sipper bottles only in the playing areas.\n\n## Code of conduct for players\n\nIt is our aim to provide you with a safe, friendly and enjoyable environment at our fantastic table tennis facility. In order to assist us and to ensure that all members enjoy their visits to our association, we insist that you adhere to this code of conduct.\n\n- Learn to play by the rules.\n\n- Respect coaches, team-mates, opponents, officials and their decisions. Treat officials as you would expect to be treated by them.\n\n- Play for fun and enjoyment.\n\n- Be a good sport; win with modesty, lose with dignity.\n\n- Always arrive in good time for training and matches.\n\n- Always bring and wear the correct kit including a shirt, shorts, pants or skirt and non-marking footwear. Clothing colour shall be clearly different to the colour of ball being used.\n\n- Always inform the organiser in plenty of time if you are unavailable for any match, preferably at least one to two days before a match.\n\n- Treat our facility with respect. Aim to leave the stadium in better condition than it was when you arrived.\n\n- When umpiring, stay focused and alert. Do not bring an MP3 player, cell phone or other distraction to the umpire stand.\n\n- No food or soft drinks to be consumed in the playing areas.\n\n- Do not make excessive noise that may disturb other players.\n\n**Failure to comply with any of the above may be deemed a breach of the Code of Conduct. In the event of a breach by a member or visitor, the association reserves the right to discipline the offender as it sees fit.**\n\n## Acceptance\n\nMembers and visitors will be deemed to have accepted this Code of Conduct by attending the association’s premises and may obtain a copy for their own reference."
+    }
+  }
+}
