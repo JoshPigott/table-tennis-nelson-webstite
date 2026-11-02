@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "para_power_pages",
+  "info": {
+    "singularName": "para-power-page",
+    "pluralName": "para-power-pages",
+    "displayName": "Para Power page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heroTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Para Power Table Tennis"
+    },
+    "mainContent": {
+      "type": "richtext",
+      "required": true,
+      "default": "## Table tennis for every ability\n\nTable Tennis Nelson is committed to offering opportunities for people of any ability or age to play table tennis.\n\nPara Power is a session for people with a physical or intellectual impairment. Come along and join us, with coaching support to help you learn to play table tennis in a conventional or adapted way.\n\n## Session details\n\n**When:** Thursday, 4:00 pm – 5:00 pm, during school term time.\n\n**Where:** Table Tennis Nelson Stadium, Saxton Field, Nelson.\n\n**Cost:** $25 per term."
+    },
+    "contactContent": {
+      "type": "richtext",
+      "default": "## Benefits\n\n- Exercise the brain and body.\n- Build your confidence and skill with each session.\n- Enjoy a year-round recreation option, rain or shine.\n- Make great social connections and build whanaungatanga.\n- Explore Para Table Tennis competitive options, with training camps and tournaments across New Zealand.\n\nA huge thank you to Table Tennis New Zealand (TTNZ) and Sport Tasman’s Tū Manawa Fund for supporting these sessions.\n\n## Any questions?\n\nEmail [tabletennisnelson@outlook.com](mailto:tabletennisnelson@outlook.com) or phone [027 346 3996](tel:+64273463996)."
+    }
+  }
+}
