@@ -1,0 +1,11 @@
+---
+import Container from './Container.astro';
+interface Props { size?: 'wide' | 'medium' | 'reading'; }
+const { size = 'reading' } = Astro.props;
+---
+
+<header class="bg-pale-blue py-[clamp(3rem,6vw,5rem)]">
+  <Container {size} mobileAt={size === 'medium' ? '600' : '650'}>
+    <slot />
+  </Container>
+</header>

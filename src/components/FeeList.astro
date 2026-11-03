@@ -1,0 +1,6 @@
+---
+interface Props { id: string; annual?: boolean; }
+const { id, annual = false } = Astro.props;
+---
+
+<dl {id} class:list={['m-0 [&_div]:grid [&_div]:grid-cols-[minmax(0,1fr)_auto] [&_div]:gap-4 [&_div]:border-b [&_div]:border-soft-blue [&_div]:py-3 [&_dd]:m-0 [&_dd]:font-extrabold [&_dd]:whitespace-nowrap max-[600px]:[&_div]:gap-3', annual && 'max-[700px]:[&_div]:border-b-0']}></dl>

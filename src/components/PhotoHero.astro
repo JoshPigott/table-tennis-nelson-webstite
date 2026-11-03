@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Container from './Container.astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  variant?: 'para' | 'parkinsons' | 'plan';
+  widths?: number[];
+  quality?: number;
+}
+const { src, alt, variant = 'para', widths, quality } = Astro.props;
+const plan = variant === 'plan';
+const heights = {
+  para: 'h-[80svh] min-h-[480px]',
+  parkinsons: 'h-svh min-h-[540px]',
+  plan: 'h-[65svh] min-h-[420px] max-h-[680px] max-[650px]:max-h-none',
+};
+---
+
+<header class:list={['relative flex items-end overflow-hidden bg-navy after:absolute after:inset-0 after:content-[\'\'] max-[650px]:block max-[650px]:h-auto max-[650px]:min-h-0 max-[650px]:bg-pale-blue max-[650px]:after:hidden', heights[variant], plan ? 'after:bg-[linear-gradient(transparent_30%,rgb(0_0_0_/_0.75))]' : 'after:bg-[linear-gradient(transparent_45%,rgb(0_0_0_/_0.72))]']}>
+  <Image {src} {alt} {widths} {quality} sizes="100vw" loading="eager" fetchpriority="high" class:list={['absolute inset-0 h-full w-full object-cover max-[650px]:static max-[650px]:block max-[650px]:h-auto', plan ? 'object-[center_25%]' : 'object-center max-[650px]:object-contain']} />
+  <Container size="reading" mobileAt="650" class:list={['relative z-1 text-white max-[650px]:pt-6 max-[650px]:pb-8 max-[650px]:text-navy', plan ? 'py-12' : 'pb-[clamp(2rem,6vw,5rem)]']}>
+    <slot />
+  </Container>
+</header>
