@@ -1,22 +1,23 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PageHeading from '../components/PageHeading.astro';
 ---
 
 <SiteLayout title="Draws | Table Tennis Nelson" description="Find team lists and competition draws for Table Tennis Nelson.">
-  <header class="page-intro">
-    <div class="wrap">
-      <h1>Draws</h1>
-      <p>Thursday night competition draws.</p>
-    </div>
-  </header>
-  <section class="wrap content" aria-label="Competition draws">
-    <p id="draws-status" role="status">Loading draws...</p>
-    <ul id="draws-list"></ul>
+  <PageIntro>
+    <PageHeading>Draws</PageHeading>
+    <p class="m-0 max-w-[42rem] text-xl leading-[1.65]">Thursday night competition draws.</p>
+  </PageIntro>
+  <Container as="section" size="reading" mobileAt="650" class="py-[clamp(2.5rem,6vw,4rem)]" aria-label="Competition draws">
+    <p id="draws-status" role="status" class="m-0 text-[1.1rem] leading-[1.65]">Loading draws...</p>
+    <ul id="draws-list" class="m-0 list-none p-0"></ul>
     <template id="draw-template">
-      <li><a target="_blank" rel="noopener noreferrer"><span></span><span class="file-label">View PDF</span></a></li>
+      <li class="border-b border-soft-blue first:border-t"><a class="flex items-center justify-between gap-6 py-6 text-[1.2rem] font-bold no-underline [overflow-wrap:anywhere] max-[650px]:gap-4 max-[650px]:pr-3 max-[650px]:text-[1.1rem]" target="_blank" rel="noopener noreferrer"><span></span><span class="shrink-0 text-[.95rem] text-blue-dark underline underline-offset-3">View PDF</span></a></li>
     </template>
-    <nav class="pagination" id="draws-pagination" aria-label="Draws pages" hidden></nav>
-  </section>
+    <nav class="mt-8 flex items-center justify-center gap-4 [&_a]:min-h-11 [&_a]:rounded-md [&_a]:border [&_a]:border-blue-dark [&_a]:bg-paper [&_a]:px-4 [&_a]:py-2 [&_a]:font-bold [&_a]:text-blue-dark [&_a]:no-underline" id="draws-pagination" aria-label="Draws pages" hidden></nav>
+  </Container>
 </SiteLayout>
 
 <script>
@@ -62,25 +63,3 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 
   loadDraws();
 </script>
-
-<style>
-  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  .page-intro { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
-  h1 { margin: 0 0 1rem; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.15; letter-spacing: -.04em; }
-  p { margin: 0; font-size: 1.1rem; line-height: 1.65; }
-  .page-intro p { max-width: 42rem; font-size: 1.25rem; }
-  .content { padding-block: clamp(2.5rem, 6vw, 4rem); }
-  .pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem; }
-  .pagination[hidden] { display: none; }
-  .pagination :global(a) { min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--blue-dark); border-radius: 6px; background: var(--paper); color: var(--blue-dark); font: inherit; font-weight: 700; text-decoration: none; }
-  #draws-list { margin: 0; padding: 0; list-style: none; }
-  #draws-list :global(li) { border-bottom: 1px solid var(--soft-blue); }
-  #draws-list :global(li:first-child) { border-top: 1px solid var(--soft-blue); }
-  #draws-list :global(a) { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding-block: 1.5rem; font-size: 1.2rem; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
-  #draws-list :global(.file-label) { flex-shrink: 0; color: var(--blue-dark); font-size: .95rem; text-decoration: underline; text-underline-offset: 3px; }
-  @media (max-width: 650px) {
-    .wrap { width: calc(100% - 2rem); }
-    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
-    #draws-list :global(a) { gap: 1rem; padding-right: .75rem; font-size: 1.1rem; }
-  }
-</style>

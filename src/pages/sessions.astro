@@ -26,54 +26,57 @@ const weekdays = [
   ['Thursday', 'thursday'], ['Friday', 'friday'],
   ['Saturday', 'saturday'], ['Sunday', 'sunday'],
 ] as const;
+import Container from '../components/Container.astro';
+import FeeList from '../components/FeeList.astro';
+import SessionCardTemplate from '../components/SessionCardTemplate.astro';
 ---
 
 <SiteLayout title="Sessions & Fees | Table Tennis Nelson" description="See weekly table tennis sessions and playing fees at Table Tennis Nelson.">
-  <section class="programme" aria-labelledby="programme-title">
-    <div class="wrap">
-      <h1 id="programme-title">Sessions</h1>
-      <p id="session-status" role="status">Loading sessions…</p>
-
-      <div class="day-list" hidden data-photos={JSON.stringify(sessionPhotos.map((photo) => photo.src))}>
+  <section class="bg-pale-blue py-[clamp(3rem,6vw,5rem)] max-[600px]:py-10" aria-labelledby="programme-title">
+    <Container>
+      <h1 id="programme-title" class="mt-0 mb-10 text-[clamp(3rem,6vw,5rem)] font-bold leading-[1.1] tracking-[-.04em] max-[600px]:mb-8">Sessions</h1>
+      <p id="session-status" role="status" class="my-4">Loading sessions…</p>
+      <div id="day-list" hidden data-photos={JSON.stringify(sessionPhotos.map((photo) => photo.src))}>
         {weekdays.map(([name, key]) => (
-          <section class="day-section" data-day={key} aria-labelledby={`day-${key}`}>
-            <header class="day-heading"><h2 id={`day-${key}`}>{name}</h2><span class="day-count"></span></header>
-            <div class="session-list"></div>
+          <section class="mb-10 last:mb-0 max-[700px]:mb-8" data-day={key} aria-labelledby={'day-' + key}>
+            <header class="sticky top-0 z-2 flex items-center justify-between gap-4 border-b border-[#e4e5e7] bg-[#f7f7f7] px-6 py-[1.2rem] max-[700px]:px-0 max-[700px]:py-4">
+              <h2 id={'day-' + key} class="m-0 text-[1.8rem] font-bold leading-[1.1] tracking-[-.04em] max-[700px]:text-2xl">{name}</h2>
+              <span data-day-count class="text-[.85rem] whitespace-nowrap text-muted"></span>
+            </header>
+            <div data-session-list class="pt-2 max-[700px]:grid max-[700px]:gap-4 max-[700px]:pt-4"></div>
           </section>
         ))}
       </div>
-    </div>
+      <SessionCardTemplate />
+    </Container>
   </section>
 
-  <section class="fees" aria-labelledby="fees-title">
-    <div class="wrap">
-      <h2 id="fees-title">Fees</h2>
-      <p id="fees-status" role="status">Loading fees…</p>
-
-      <div class="fee-layout" hidden>
-        <div class="fee-options">
+  <section class="py-[clamp(3rem,6vw,5rem)]" aria-labelledby="fees-title">
+    <Container size="medium">
+      <h2 id="fees-title" class="mt-0 mb-10 text-[clamp(2.7rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-.04em] max-[600px]:mb-6">Fees</h2>
+      <p id="fees-status" role="status" class="my-4">Loading fees…</p>
+      <div id="fee-layout" class="grid grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] gap-[clamp(2rem,5vw,5rem)] max-[700px]:grid-cols-1 max-[700px]:gap-8" hidden>
+        <div class="grid content-start gap-8 [&>div+div]:border-t [&>div+div]:border-soft-blue [&>div+div]:pt-6 max-[700px]:contents">
           <div>
-            <h3>Casual play</h3>
-            <p class="option-price"><strong id="casual-price"></strong> <span id="casual-unit"></span></p>
+            <h3 class="m-0 text-[1.3rem] font-bold leading-[1.25]">Casual play</h3>
+            <p class="mt-2 mb-0 text-muted"><strong id="casual-price" class="text-[clamp(2.7rem,5vw,3.8rem)] font-bold leading-none text-blue-dark"></strong> <span id="casual-unit"></span></p>
           </div>
-          <div class="bank-transfer">
-            <h3>Bank transfer</h3>
-            <dl>
+          <div class="max-[700px]:row-start-3">
+            <h3 class="m-0 text-[1.3rem] font-bold leading-[1.25]">Bank transfer</h3>
+            <dl class="mt-[.8rem] mb-0 grid gap-3 [&_dt]:text-[.9rem] [&_dt]:text-muted [&_dd]:mt-[.2rem] [&_dd]:font-bold [&_dd]:tabular-nums [&_dd]:[overflow-wrap:anywhere]">
               <div><dt>Account name</dt><dd id="bank-name"></dd></div>
               <div><dt>Account number</dt><dd id="bank-number"></dd></div>
             </dl>
           </div>
         </div>
-
-        <div class="term-fees">
-          <h3>Term fees <small id="term-length"></small></h3>
-          <dl class="fee-list" id="term-fee-list"></dl>
-
-          <h3 class="annual-heading">Annual membership</h3>
-          <dl class="fee-list" id="annual-fee-list"></dl>
+        <div class="border-l border-soft-blue pl-[clamp(2rem,4vw,4rem)] max-[700px]:border-t max-[700px]:border-l-0 max-[700px]:pt-6 max-[700px]:pl-0">
+          <h3 class="mt-0 mb-[.8rem] text-[1.3rem] font-bold leading-[1.25]">Term fees <small id="term-length" class="ml-2 text-[.9rem] font-normal text-muted max-[600px]:mt-[.35rem] max-[600px]:ml-0 max-[600px]:block"></small></h3>
+          <FeeList id="term-fee-list" />
+          <h3 class="mt-6 mb-[.8rem] text-[1.3rem] font-bold leading-[1.25]">Annual membership</h3>
+          <FeeList id="annual-fee-list" annual />
         </div>
       </div>
-    </div>
+    </Container>
   </section>
 </SiteLayout>
 
@@ -100,25 +103,22 @@ const weekdays = [
 
   const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
-  const cards = [...document.querySelectorAll<HTMLElement>('.day-section[data-day]')];
-
-  function addText(parent: HTMLElement, tag: 'span' | 'h3' | 'p' | 'li', className: string, value: string) {
-    const child = document.createElement(tag);
-    child.className = className;
-    child.textContent = value;
-    parent.append(child);
-  }
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-day]')];
+  const photos: string[] = JSON.parse(document.getElementById('day-list')!.dataset.photos!);
+  const cardTemplate = document.getElementById('session-card-template') as HTMLTemplateElement;
+  const timeTemplate = document.getElementById('session-time-template') as HTMLTemplateElement;
+  const separatorTemplate = document.getElementById('session-separator-template') as HTMLTemplateElement;
+  const singleTimeTemplate = document.getElementById('session-single-time-template') as HTMLTemplateElement;
 
   function renderDay(card: HTMLElement, sessions: Session[]) {
-    const list = card.querySelector('.session-list');
+    const list = card.querySelector('[data-session-list]');
     if (!list) return;
-    const count = card.querySelector('.day-count');
+    const count = card.querySelector('[data-day-count]');
     if (count) count.textContent = `${sessions.length} ${sessions.length === 1 ? 'session' : 'sessions'}`;
 
     const sections = sessions.map((session) => {
-      const row = document.createElement('article');
-      row.className = 'session-row';
-      const photos: string[] = JSON.parse(document.querySelector<HTMLElement>('.day-list')!.dataset.photos!);
+      const fragment = cardTemplate.content.cloneNode(true) as DocumentFragment;
+      const row = fragment.querySelector('article')!;
       const day = card.dataset.day;
       const morning = /morning/i.test(session.title);
       let photoIndex = /parkinson/i.test(session.title) ? 3 : /junior|coaching/i.test(session.title) ? 2 : /social/i.test(session.title) ? 1 : 0;
@@ -126,63 +126,50 @@ const weekdays = [
       if (day === 'wednesday' && morning) photoIndex = 5;
       if (/para\s*power/i.test(session.title)) photoIndex = 6;
       if ((day === 'monday' || day === 'friday') && morning) photoIndex = 7;
-      const thumbnail = document.createElement('div');
-      thumbnail.className = 'session-thumbnail';
-      const image = document.createElement('img');
+      const image = row.querySelector<HTMLImageElement>('[data-photo]')!;
       image.src = photos[photoIndex];
-      if (photoIndex === 4 || photoIndex === 6) image.style.objectPosition = 'center 35%';
-      image.alt = '';
-      image.width = 150;
-      image.height = 105;
-      image.loading = 'lazy';
-      thumbnail.append(image);
-      const section = document.createElement('div');
-      section.className = 'session-content';
-      addText(section, 'span', 'term-note', session.schoolTermsOnly ? 'School terms only' : 'Weekly session');
-      addText(section, 'h3', 'session-title', session.title);
-      addText(section, 'p', 'session-description', session.description);
+      image.classList.toggle('object-[center_35%]', photoIndex === 4 || photoIndex === 6);
+      row.querySelector('[data-note]')!.textContent = session.schoolTermsOnly ? 'School terms only' : 'Weekly session';
+      row.querySelector('[data-title]')!.textContent = session.title;
+      row.querySelector('[data-description]')!.textContent = session.description;
 
       const highlights = session.highlights?.split(/\r?\n/).map((item) => item.trim()).filter(Boolean) ?? [];
-      if (highlights.length > 0) {
-        const list = document.createElement('ul');
-        highlights.forEach((item) => addText(list, 'li', '', item));
-        section.append(list);
-      }
-
+      const highlightsList = row.querySelector<HTMLUListElement>('[data-highlights]')!;
+      highlightsList.hidden = highlights.length === 0;
+      highlights.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        highlightsList.append(li);
+      });
       if (session.contactEmail) {
-        const contact = document.createElement('p');
-        contact.className = 'contact';
-        contact.append('For more information, email: ');
-        const link = document.createElement('a');
+        const contact = row.querySelector<HTMLParagraphElement>('[data-contact]')!;
+        const link = contact.querySelector('a')!;
         link.href = `mailto:${session.contactEmail}`;
         link.textContent = session.contactEmail;
-        contact.append(link);
-        section.append(contact);
+        contact.hidden = false;
       }
-      const timing = document.createElement('div');
-      timing.className = 'session-timing';
+      const timing = row.querySelector<HTMLElement>('[data-timing]')!;
       const timeParts = session.time.split(/\s*[–—−-]\s*/);
       if (timeParts.length === 2) {
         timeParts.forEach((part, index) => {
-          const timePart = document.createElement('div');
-          timePart.className = 'time-part';
+          if (index > 0) timing.append(separatorTemplate.content.cloneNode(true));
+          const fragment = timeTemplate.content.cloneNode(true) as DocumentFragment;
           const match = part.trim().match(/^(\d{1,2}(?::\d{2})?)\s*(am|pm)$/i);
-          addText(timePart, 'span', 'time', match ? match[1] : part.trim());
-          addText(timePart, 'span', 'time-period', match ? match[2].toLowerCase() : '');
-          timing.append(timePart);
-          if (index === 0) addText(timing, 'span', 'time-separator', '–');
+          fragment.querySelector('[data-time]')!.textContent = match ? match[1] : part.trim();
+          fragment.querySelector('[data-period]')!.textContent = match ? match[2].toLowerCase() : '';
+          timing.append(fragment);
         });
       } else {
-        addText(timing, 'p', 'time', session.time);
+        const fragment = singleTimeTemplate.content.cloneNode(true) as DocumentFragment;
+        fragment.firstElementChild!.textContent = session.time;
+        timing.append(fragment);
       }
       timing.setAttribute('aria-label', `Session time: ${session.time}`);
-      row.append(thumbnail, section, timing);
       return row;
     });
-
     if (sections.length === 0) {
       const empty = document.createElement('p');
-      empty.className = 'empty-day';
+      empty.className = 'm-0 p-6 text-muted';
       empty.textContent = 'No sessions listed';
       list.replaceChildren(empty);
     } else {
@@ -207,7 +194,7 @@ const weekdays = [
         }
         document.querySelector('#programme-title')!.textContent = data.heading;
         cards.forEach((card) => renderDay(card, data[card.dataset.day!]));
-        document.querySelector('.day-list')?.removeAttribute('hidden');
+        document.querySelector('#day-list')?.removeAttribute('hidden');
         if (status) status.hidden = true;
       })
       .catch((error) => {
@@ -248,7 +235,7 @@ const weekdays = [
     document.getElementById('bank-number')!.textContent = data.bankAccountNumber;
     document.getElementById('casual-price')!.textContent = data.casualPrice;
     document.getElementById('casual-unit')!.textContent = data.casualUnit;
-    document.querySelector('.fee-layout')?.removeAttribute('hidden');
+    document.querySelector('#fee-layout')?.removeAttribute('hidden');
     if (feesStatus) feesStatus.hidden = true;
   }
 
@@ -267,152 +254,3 @@ const weekdays = [
       });
   }
 </script>
-
-<style>
-  .programme {
-    padding-block: clamp(3rem, 6vw, 5rem);
-    background: var(--pale-blue);
-  }
-
-  .wrap {
-    width: min(100% - 3rem, 1200px);
-    margin-inline: auto;
-  }
-
-  h1, h2 { margin-top: 0; line-height: 1.1; letter-spacing: -.04em; }
-  h1 { margin-bottom: 2.5rem; font-size: clamp(3rem, 6vw, 5rem); }
-  h2 { margin-bottom: 0; font-size: 1.8rem; }
-  .day-list[hidden] { display: none; }
-  .day-section { margin-bottom: 2.5rem; }
-  .day-section:last-child { margin-bottom: 0; }
-  .day-heading { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid #e4e5e7; background: #f7f7f7; }
-  .day-heading h2 { font-size: 1.8rem; letter-spacing: -.04em; }
-  .day-count { color: var(--muted); font-size: .85rem; white-space: nowrap; }
-  .session-list { padding-top: .5rem; }
-  .session-list :global(.session-row) {
-    --row-background: #f7f7f7;
-    position: relative;
-    display: grid;
-    grid-template-columns: 150px minmax(0, 1fr) 190px;
-    align-items: start;
-    gap: 44px;
-    padding: 32px 24px;
-    border-radius: 9px;
-    background: var(--row-background);
-  }
-  .session-list :global(.session-row)::after { content: ''; position: absolute; bottom: 0; left: 24px; right: 24px; height: 1px; background: #e6e7e9; }
-  .session-list :global(.session-thumbnail) { position: relative; width: 150px; height: 105px; border-radius: 7px; overflow: hidden; }
-  .session-list :global(.session-thumbnail img) { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .session-list :global(.session-content) { min-width: 0; }
-  .session-list :global(.term-note) { display: inline-flex; align-items: center; margin-bottom: 12px; padding: 2px 10px; border-radius: 100px; background: #e6e7e9; color: var(--blue-dark); font-size: .85rem; font-weight: 700; line-height: 1.5; }
-  .session-list :global(.session-title) { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; color: var(--navy); }
-  .session-list :global(.session-description) { max-width: 560px; margin: 0; color: var(--muted); font-size: 1.1rem; line-height: 1.65; }
-  .session-list :global(.session-timing) { display: flex; justify-content: center; gap: 9px; padding-top: 20px; color: var(--blue-dark); }
-  .session-list :global(.time-part) { text-align: center; }
-  .session-list :global(.time), .session-list :global(.time-separator) { display: block; margin: 0; font-size: 1.5rem; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .session-list :global(.time-period) { display: block; margin-top: 5px; font-size: 1rem; }
-  .session-list :global(ul) { margin: 12px 0 0; padding-left: 1.2rem; color: var(--muted); font-size: 1rem; }
-  .session-list :global(li + li) { margin-top: .3rem; }
-  .session-list :global(.contact) { margin: 12px 0 0; color: var(--muted); font-size: 1rem; }
-  .session-list :global(.contact a) { color: var(--blue-dark); font-weight: 700; overflow-wrap: anywhere; text-underline-offset: 3px; }
-  .session-list :global(.empty-day) { margin: 0; padding: 1.5rem; color: var(--muted); }
-
-  .fees { padding-block: clamp(3rem, 6vw, 5rem); }
-  .fees .wrap { max-width: 1100px; }
-  .fees h2 { margin-bottom: 2.5rem; font-size: clamp(2.7rem, 5vw, 4rem); }
-  .fees h3 { margin: 0; font-size: 1.3rem; line-height: 1.25; }
-
-  .fee-layout {
-    display: grid;
-    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-    gap: clamp(2rem, 5vw, 5rem);
-  }
-  .fee-layout[hidden] { display: none; }
-  .fee-options { display: grid; align-content: start; gap: 2rem; }
-  .fee-options > div + div { padding-top: 1.5rem; border-top: 1px solid var(--soft-blue); }
-  .option-price { margin: .5rem 0 0; color: var(--muted); }
-  .option-price strong { color: var(--blue-dark); font-size: clamp(2.7rem, 5vw, 3.8rem); line-height: 1; }
-
-  .term-fees {
-    padding-left: clamp(2rem, 4vw, 4rem);
-    border-left: 1px solid var(--soft-blue);
-  }
-  .term-fees h3 { margin-bottom: .8rem; }
-  .term-fees h3 small { margin-left: .5rem; color: var(--muted); font-size: .9rem; font-weight: 400; }
-  .term-fees .annual-heading { margin-top: 1.5rem; }
-  .fee-list { margin: 0; }
-  .fee-list :global(div) {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem;
-    padding: .75rem 0;
-    border-bottom: 1px solid var(--soft-blue);
-  }
-  .fee-list :global(dd) { margin: 0; font-weight: 800; white-space: nowrap; }
-
-  .bank-transfer dl {
-    display: grid;
-    gap: .75rem;
-    margin: .8rem 0 0;
-  }
-  .bank-transfer dt { color: var(--muted); font-size: .9rem; }
-  .bank-transfer dd {
-    margin: .2rem 0 0;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    overflow-wrap: anywhere;
-  }
-
-  @media (max-width: 700px) {
-    .fee-layout { grid-template-columns: 1fr; gap: 2rem; }
-    .fee-options { display: contents; }
-    .term-fees { padding: 1.5rem 0 0; border-top: 1px solid var(--soft-blue); border-left: 0; }
-    .term-fees > .fee-list:last-child :global(div) { border-bottom: 0; }
-    .bank-transfer { grid-row: 3; }
-  }
-
-  @media (max-width: 950px) {
-    .session-list :global(.session-row) { grid-template-columns: 120px minmax(0, 1fr) 165px; gap: 24px; }
-    .session-list :global(.session-thumbnail) { width: 120px; height: 90px; }
-    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.375rem; }
-  }
-  @media (max-width: 700px) {
-    .day-section { margin-bottom: 2rem; }
-    .day-heading { padding: 1rem 0; }
-    .day-heading h2 { font-size: 1.5rem; }
-    .session-list { display: grid; gap: 1rem; padding-top: 1rem; }
-    .session-list :global(.session-row) {
-      --row-background: #fff;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: 'photo' 'title' 'time' 'note' 'description';
-      gap: 1.25rem 1rem;
-      padding: 1.25rem;
-      border: 1px solid var(--soft-blue);
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgb(23 59 104 / .04);
-    }
-    .session-list :global(.session-row)::after { display: none; }
-    .session-list :global(.session-thumbnail) { grid-area: photo; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 8px; }
-    .session-list :global(.session-content) { display: contents; }
-    .session-list :global(.session-timing) { grid-area: time; align-self: center; align-items: baseline; justify-content: flex-start; flex-wrap: wrap; gap: .35rem; min-width: 0; padding: 0; }
-    .session-list :global(.time-part) { display: flex; align-items: baseline; gap: .2rem; }
-    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.25rem; white-space: normal; overflow-wrap: anywhere; }
-    .session-list :global(.time-period) { margin: 0; font-size: .85rem; }
-    .session-list :global(.term-note) { grid-area: note; justify-self: start; margin: 0; background: var(--pale-blue); }
-    .session-list :global(.session-title) { grid-area: title; margin: 0; line-height: 1.3; }
-    .session-list :global(.session-description) { grid-area: description; font-size: 1rem; line-height: 1.6; }
-    .session-list :global(.contact) { padding-top: .85rem; border-top: 1px solid var(--soft-blue); font-size: .95rem; }
-  }
-  @media (max-width: 600px) {
-    .programme { padding-block: 2.5rem; }
-    .wrap { width: min(100% - 2rem, 1200px); }
-    h1 { margin-bottom: 2rem; }
-    .fees h2 { margin-bottom: 1.5rem; }
-    .term-fees h3 small { display: block; margin: .35rem 0 0; }
-    .fee-list :global(div) { gap: .75rem; }
-  }
-  @media (max-width: 420px) {
-    .session-list :global(.session-row) { gap: 1rem; padding: 1rem; }
-    .session-list :global(.time), .session-list :global(.time-separator) { font-size: 1.1rem; }
-  }
-</style>

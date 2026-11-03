@@ -1,34 +1,32 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { Image } from 'astro:assets';
 import clubPhoto from '../assets/strategic-plan/players-having-fun.jpg';
+import Container from '../components/Container.astro';
+import PageStatus from '../components/PageStatus.astro';
+import PageHeading from '../components/PageHeading.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import RichText from '../components/RichText.astro';
+import StrategicPlanTemplates from '../components/StrategicPlanTemplates.astro';
 ---
 
-<SiteLayout
-  title="Strategic Plan | Table Tennis Nelson"
-  description="Our purpose, vision, values and priorities for growing table tennis in the Nelson–Tasman region. Read Table Tennis Nelson's strategic plan."
->
-  <p class="wrap page-status" id="plan-status" role="status">Loading strategic plan...</p>
+<SiteLayout title="Strategic Plan | Table Tennis Nelson" description="Our purpose, vision, values and priorities for growing table tennis in the Nelson–Tasman region. Read Table Tennis Nelson's strategic plan.">
+  <PageStatus id="plan-status">Loading strategic plan...</PageStatus>
   <div id="plan-page" hidden>
-  <header class="hero">
-    <Image src={clubPhoto} alt="Young players laughing together around a table tennis table at Saxton Field in Nelson" widths={[640, 960, 1280, 1600, 1877]} sizes="100vw" loading="eager" fetchpriority="high" quality={95} />
-    <div class="wrap hero-copy">
-      <p class="eyebrow" data-field="period"></p>
-      <h1 data-field="title"></h1>
-    </div>
-  </header>
-
-  <article class="content" id="main-content"></article>
-
-  <section class="document-band" id="document-band" hidden aria-labelledby="document-title">
-    <div class="wrap document-row">
-      <div>
-        <h2 id="document-title" data-field="documentHeading"></h2>
-        <p data-field="documentDescription"></p>
-      </div>
-      <a class="download" id="plan-download" download><span data-field="downloadLabel"></span> <span class="pdf-label">(PDF)</span></a>
-    </div>
-  </section>
+    <PhotoHero variant="plan" src={clubPhoto} alt="Young players laughing together around a table tennis table at Saxton Field in Nelson" widths={[640, 960, 1280, 1600, 1877]} quality={95}>
+      <p class="mt-0 mb-3 text-base font-bold leading-[1.65]" data-field="period"></p>
+      <PageHeading hero leading="1.15" data-field="title" />
+    </PhotoHero>
+    <RichText as="article" variant="plan" id="main-content" />
+    <StrategicPlanTemplates />
+    <section class="bg-pale-blue py-[clamp(3rem,6vw,4rem)]" id="document-band" hidden aria-labelledby="document-title">
+      <Container size="reading" mobileAt="650" class="flex items-center justify-between gap-8 max-[650px]:flex-col max-[650px]:items-stretch">
+        <div class="max-w-[35rem]">
+          <h2 class="mt-0 mb-4 text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.15] tracking-[-.04em]" id="document-title" data-field="documentHeading"></h2>
+          <p class="mt-0 mb-5 text-[1.1rem] leading-[1.65]" data-field="documentDescription"></p>
+        </div>
+        <a class="inline-block shrink-0 rounded-md bg-blue-dark px-5 py-4 text-center font-bold text-white no-underline" id="plan-download" download><span data-field="downloadLabel"></span> <span class="block text-[.9rem] font-normal">(PDF)</span></a>
+      </Container>
+    </section>
   </div>
 </SiteLayout>
 
@@ -40,6 +38,10 @@ import clubPhoto from '../assets/strategic-plan/players-having-fun.jpg';
   const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
   const byId = (id: string) => document.getElementById(id)!;
+  function cloneTemplate(id: string): HTMLElement {
+    const template = byId(id) as HTMLTemplateElement;
+    return template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+  }
 
   async function loadPage() {
     try {
@@ -57,23 +59,20 @@ import clubPhoto from '../assets/strategic-plan/players-having-fun.jpg';
       });
       byId('main-content').innerHTML = markdown.render(data.mainContent);
       const content = byId('main-content');
-      const overview = document.createElement('div');
-      overview.className = 'wrap overview';
-      const columns = document.createElement('div');
-      columns.className = 'purpose-vision';
+      const overview = cloneTemplate('plan-overview-template');
+      const columns = cloneTemplate('plan-columns-template');
       let section: HTMLElement = overview;
       let item: HTMLElement = overview;
       let sectionCount = 0;
       for (const element of Array.from(content.children)) {
         if (element.tagName === 'H2') {
-          section = document.createElement('section');
           sectionCount++;
-          section.className = sectionCount <= 2 ? '' : 'plan-section';
+          section = sectionCount <= 2 ? document.createElement('section') : cloneTemplate('plan-section-template');
+          section.dataset.priority = String(sectionCount > 2 && sectionCount % 2 === 0);
           (sectionCount <= 2 ? columns : content).append(section);
           item = section;
         } else if (element.tagName === 'H3') {
-          item = document.createElement('div');
-          item.className = 'plan-item';
+          item = cloneTemplate('plan-item-template');
           section.append(item);
         }
         item.append(element);
@@ -98,59 +97,3 @@ import clubPhoto from '../assets/strategic-plan/players-having-fun.jpg';
 
   loadPage();
 </script>
-
-<style>
-  .page-status { padding-block: 3rem; }
-  [hidden] { display: none !important; }
-  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  h1, h2 { margin-top: 0; line-height: 1.15; letter-spacing: -.04em; }
-  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); }
-  h2 { margin-bottom: 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); }
-  p { margin: 0 0 1.25rem; font-size: 1.1rem; line-height: 1.65; }
-  .hero { position: relative; min-height: 420px; height: 65svh; max-height: 680px; display: flex; align-items: end; background: var(--navy); overflow: hidden; }
-  .hero :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
-  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 30%, rgb(0 0 0 / .75)); }
-  .hero-copy { position: relative; z-index: 1; padding-block: 3rem; color: white; }
-  .eyebrow { margin-bottom: .75rem; font-size: 1rem; font-weight: 700; }
-  .content :global(.overview), .content :global(.plan-section) { padding-block: clamp(3rem, 6vw, 5rem); }
-  .content :global(.overview) { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  .content :global(.overview > p) { max-width: 45rem; margin-bottom: 2.5rem; font-size: 1.25rem; }
-  .content :global(.purpose-vision) { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
-  .content :global(.purpose-vision p:last-child) { margin-bottom: 0; }
-  .content :global(.plan-section) { padding-inline: max(1.5rem, calc((100% - 1000px) / 2)); }
-  .content :global(.plan-section:nth-child(even)) { background: var(--pale-blue); }
-  .content :global(h2) { margin: 0 0 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.03em; }
-  .content :global(h3) { margin: 0 0 .6rem; font-size: 1.3rem; line-height: 1.2; letter-spacing: -.03em; }
-  .content :global(.plan-section) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; }
-  .content :global(.plan-section > h2), .content :global(.plan-section > p) { grid-column: 1 / -1; margin-bottom: 0; }
-  .content :global(.plan-item) { padding-top: 1.25rem; border-top: 1px solid var(--soft-blue); }
-  .content :global(.plan-item p:last-child) { margin-bottom: 0; }
-  .content :global(.plan-item > p > strong:only-child) { color: var(--blue-dark); font-size: 1rem; }
-  .content :global(.plan-section:nth-child(odd)) { display: block; counter-reset: priority; }
-  .content :global(.plan-section:nth-child(odd) .plan-item) { position: relative; margin-top: 1.5rem; padding: 1.5rem 0 0 2rem; counter-increment: priority; }
-  .content :global(.plan-section:nth-child(odd) .plan-item::before) { content: counter(priority) '.'; position: absolute; left: 0; color: var(--blue-dark); font-size: 1.2rem; font-weight: 700; }
-  .content :global(p), .content :global(li) { font-size: 1.1rem; line-height: 1.65; }
-  .content :global(p) { margin: 0 0 1.25rem; }
-  .content :global(ul), .content :global(ol) { margin: 0 0 1.5rem; padding-left: 1.5rem; }
-  .content :global(li + li) { margin-top: .6rem; }
-  .content :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
-  .content :global(blockquote) { margin: 1.5rem 0; padding-left: 1.25rem; border-left: 3px solid var(--soft-blue); }
-  .content :global(hr) { margin-block: 2rem; border: 0; border-top: 1px solid var(--soft-blue); }
-  .document-band { padding-block: clamp(3rem, 6vw, 4rem); background: var(--pale-blue); }
-  .document-row { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-  .document-row > div { max-width: 35rem; }
-  .download { display: inline-block; flex-shrink: 0; padding: 1rem 1.25rem; border-radius: 6px; background: var(--blue-dark); color: white; font-weight: 700; text-decoration: none; text-align: center; }
-  .download .pdf-label { display: block; font-size: .9rem; font-weight: 400; }
-  @media (max-width: 650px) {
-    .wrap { width: min(100% - 2rem, 1000px); }
-    .hero { display: block; height: auto; min-height: 0; max-height: none; background: var(--pale-blue); }
-    .hero :global(img) { position: static; display: block; height: auto; }
-    .hero::after { display: none; }
-    .hero-copy { padding-block: 1.5rem 2rem; color: var(--navy); }
-    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
-    .content :global(.overview) { width: calc(100% - 2rem); }
-    .content :global(.purpose-vision), .content :global(.plan-section) { grid-template-columns: 1fr; gap: 1.75rem; }
-    .content :global(.plan-section) { padding-inline: 1rem; }
-    .document-row { flex-direction: column; align-items: stretch; }
-  }
-</style>
