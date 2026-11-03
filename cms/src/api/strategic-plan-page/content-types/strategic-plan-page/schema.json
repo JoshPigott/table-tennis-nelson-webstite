@@ -1,0 +1,45 @@
+{
+  "kind": "singleType",
+  "collectionName": "strategic_plan_pages",
+  "info": {
+    "singularName": "strategic-plan-page",
+    "pluralName": "strategic-plan-pages",
+    "displayName": "Strategic plan page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "period": {
+      "type": "string",
+      "required": false
+    },
+    "mainContent": {
+      "type": "richtext",
+      "required": true
+    },
+    "documentHeading": {
+      "type": "string",
+      "required": true
+    },
+    "documentDescription": {
+      "type": "text",
+      "required": true
+    },
+    "downloadLabel": {
+      "type": "string",
+      "required": true
+    },
+    "document": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    }
+  }
+}

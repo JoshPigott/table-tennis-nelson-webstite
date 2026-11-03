@@ -1,0 +1,156 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { Image } from 'astro:assets';
+import clubPhoto from '../assets/strategic-plan/players-having-fun.jpg';
+---
+
+<SiteLayout
+  title="Strategic Plan | Table Tennis Nelson"
+  description="Our purpose, vision, values and priorities for growing table tennis in the Nelson–Tasman region. Read Table Tennis Nelson's strategic plan."
+>
+  <p class="wrap page-status" id="plan-status" role="status">Loading strategic plan...</p>
+  <div id="plan-page" hidden>
+  <header class="hero">
+    <Image src={clubPhoto} alt="Young players laughing together around a table tennis table at Saxton Field in Nelson" widths={[640, 960, 1280, 1600, 1877]} sizes="100vw" loading="eager" fetchpriority="high" quality={95} />
+    <div class="wrap hero-copy">
+      <p class="eyebrow" data-field="period"></p>
+      <h1 data-field="title"></h1>
+    </div>
+  </header>
+
+  <article class="content" id="main-content"></article>
+
+  <section class="document-band" id="document-band" hidden aria-labelledby="document-title">
+    <div class="wrap document-row">
+      <div>
+        <h2 id="document-title" data-field="documentHeading"></h2>
+        <p data-field="documentDescription"></p>
+      </div>
+      <a class="download" id="plan-download" download><span data-field="downloadLabel"></span> <span class="pdf-label">(PDF)</span></a>
+    </div>
+  </section>
+  </div>
+</SiteLayout>
+
+<script>
+  import MarkdownIt from 'markdown-it';
+
+  const markdown = new MarkdownIt({ linkify: true });
+  markdown.disable('image');
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+  const byId = (id: string) => document.getElementById(id)!;
+
+  async function loadPage() {
+    try {
+      if (!cmsUrl) throw new Error('Strapi URL is missing');
+      const response = await fetch(new URL('/api/strategic-plan-page?populate=*', cmsUrl), { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load strategic plan');
+      const { data } = await response.json();
+      if (!data?.title || !data?.mainContent) {
+        throw new Error('Strategic plan is incomplete');
+      }
+      document.querySelectorAll<HTMLElement>('[data-field]').forEach((element) => {
+        const value = data[element.dataset.field!] || '';
+        element.textContent = value;
+        element.hidden = !value;
+      });
+      byId('main-content').innerHTML = markdown.render(data.mainContent);
+      const content = byId('main-content');
+      const overview = document.createElement('div');
+      overview.className = 'wrap overview';
+      const columns = document.createElement('div');
+      columns.className = 'purpose-vision';
+      let section: HTMLElement = overview;
+      let item: HTMLElement = overview;
+      let sectionCount = 0;
+      for (const element of Array.from(content.children)) {
+        if (element.tagName === 'H2') {
+          section = document.createElement('section');
+          sectionCount++;
+          section.className = sectionCount <= 2 ? '' : 'plan-section';
+          (sectionCount <= 2 ? columns : content).append(section);
+          item = section;
+        } else if (element.tagName === 'H3') {
+          item = document.createElement('div');
+          item.className = 'plan-item';
+          section.append(item);
+        }
+        item.append(element);
+      }
+      overview.append(columns);
+      content.prepend(overview);
+      if (data.document?.mime === 'application/pdf' && data.document.url) {
+        const url = new URL(data.document.url, cmsUrl);
+        if (['https:', 'http:'].includes(url.protocol)) {
+          byId('plan-download').setAttribute('href', url.href);
+          byId('document-band').hidden = false;
+        }
+      }
+      document.title = data.title + ' | Table Tennis Nelson';
+      byId('plan-page').hidden = false;
+      byId('plan-status').hidden = true;
+    } catch (error) {
+      byId('plan-status').textContent = 'The strategic plan is unavailable right now. Please try again later.';
+      console.warn('Could not load strategic plan from Strapi:', error);
+    }
+  }
+
+  loadPage();
+</script>
+
+<style>
+  .page-status { padding-block: 3rem; }
+  [hidden] { display: none !important; }
+  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
+  h1, h2 { margin-top: 0; line-height: 1.15; letter-spacing: -.04em; }
+  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); }
+  h2 { margin-bottom: 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); }
+  p { margin: 0 0 1.25rem; font-size: 1.1rem; line-height: 1.65; }
+  .hero { position: relative; min-height: 420px; height: 65svh; max-height: 680px; display: flex; align-items: end; background: var(--navy); overflow: hidden; }
+  .hero :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 30%, rgb(0 0 0 / .75)); }
+  .hero-copy { position: relative; z-index: 1; padding-block: 3rem; color: white; }
+  .eyebrow { margin-bottom: .75rem; font-size: 1rem; font-weight: 700; }
+  .content :global(.overview), .content :global(.plan-section) { padding-block: clamp(3rem, 6vw, 5rem); }
+  .content :global(.overview) { width: min(100% - 3rem, 1000px); margin-inline: auto; }
+  .content :global(.overview > p) { max-width: 45rem; margin-bottom: 2.5rem; font-size: 1.25rem; }
+  .content :global(.purpose-vision) { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+  .content :global(.purpose-vision p:last-child) { margin-bottom: 0; }
+  .content :global(.plan-section) { padding-inline: max(1.5rem, calc((100% - 1000px) / 2)); }
+  .content :global(.plan-section:nth-child(even)) { background: var(--pale-blue); }
+  .content :global(h2) { margin: 0 0 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.03em; }
+  .content :global(h3) { margin: 0 0 .6rem; font-size: 1.3rem; line-height: 1.2; letter-spacing: -.03em; }
+  .content :global(.plan-section) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; }
+  .content :global(.plan-section > h2), .content :global(.plan-section > p) { grid-column: 1 / -1; margin-bottom: 0; }
+  .content :global(.plan-item) { padding-top: 1.25rem; border-top: 1px solid var(--soft-blue); }
+  .content :global(.plan-item p:last-child) { margin-bottom: 0; }
+  .content :global(.plan-item > p > strong:only-child) { color: var(--blue-dark); font-size: 1rem; }
+  .content :global(.plan-section:nth-child(odd)) { display: block; counter-reset: priority; }
+  .content :global(.plan-section:nth-child(odd) .plan-item) { position: relative; margin-top: 1.5rem; padding: 1.5rem 0 0 2rem; counter-increment: priority; }
+  .content :global(.plan-section:nth-child(odd) .plan-item::before) { content: counter(priority) '.'; position: absolute; left: 0; color: var(--blue-dark); font-size: 1.2rem; font-weight: 700; }
+  .content :global(p), .content :global(li) { font-size: 1.1rem; line-height: 1.65; }
+  .content :global(p) { margin: 0 0 1.25rem; }
+  .content :global(ul), .content :global(ol) { margin: 0 0 1.5rem; padding-left: 1.5rem; }
+  .content :global(li + li) { margin-top: .6rem; }
+  .content :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .content :global(blockquote) { margin: 1.5rem 0; padding-left: 1.25rem; border-left: 3px solid var(--soft-blue); }
+  .content :global(hr) { margin-block: 2rem; border: 0; border-top: 1px solid var(--soft-blue); }
+  .document-band { padding-block: clamp(3rem, 6vw, 4rem); background: var(--pale-blue); }
+  .document-row { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+  .document-row > div { max-width: 35rem; }
+  .download { display: inline-block; flex-shrink: 0; padding: 1rem 1.25rem; border-radius: 6px; background: var(--blue-dark); color: white; font-weight: 700; text-decoration: none; text-align: center; }
+  .download .pdf-label { display: block; font-size: .9rem; font-weight: 400; }
+  @media (max-width: 650px) {
+    .wrap { width: min(100% - 2rem, 1000px); }
+    .hero { display: block; height: auto; min-height: 0; max-height: none; background: var(--pale-blue); }
+    .hero :global(img) { position: static; display: block; height: auto; }
+    .hero::after { display: none; }
+    .hero-copy { padding-block: 1.5rem 2rem; color: var(--navy); }
+    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
+    .content :global(.overview) { width: calc(100% - 2rem); }
+    .content :global(.purpose-vision), .content :global(.plan-section) { grid-template-columns: 1fr; gap: 1.75rem; }
+    .content :global(.plan-section) { padding-inline: 1rem; }
+    .document-row { flex-direction: column; align-items: stretch; }
+  }
+</style>
