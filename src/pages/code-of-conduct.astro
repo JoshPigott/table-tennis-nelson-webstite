@@ -1,20 +1,22 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Container from '../components/Container.astro';
+import PageStatus from '../components/PageStatus.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PageHeading from '../components/PageHeading.astro';
+import RichText from '../components/RichText.astro';
 ---
 
-<SiteLayout
-  title="Code of Conduct | Table Tennis Nelson"
-  description="Stadium rules and the code of conduct for players, members and visitors at Table Tennis Nelson."
->
-  <p class="wrap page-status" id="conduct-status" role="status">Loading code of conduct...</p>
+<SiteLayout title="Code of Conduct | Table Tennis Nelson" description="Stadium rules and the code of conduct for players, members and visitors at Table Tennis Nelson.">
+  <PageStatus id="conduct-status">Loading code of conduct...</PageStatus>
   <div id="conduct-page" hidden>
-    <header class="page-intro">
-      <div class="wrap">
-        <h1 id="page-title"></h1>
-        <p class="lead" id="page-introduction"></p>
-      </div>
-    </header>
-    <article class="wrap content" id="page-content"></article>
+    <PageIntro>
+      <PageHeading id="page-title" />
+      <p class="m-0 max-w-[42rem] text-xl leading-[1.65]" id="page-introduction"></p>
+    </PageIntro>
+    <Container size="reading" mobileAt="650" class="py-[clamp(2.5rem,6vw,4rem)]">
+      <RichText as="article" variant="conduct" id="page-content" />
+    </Container>
   </div>
 </SiteLayout>
 
@@ -49,29 +51,3 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 
   loadPage();
 </script>
-
-<style>
-  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  .page-status { padding-block: 3rem; }
-  .page-intro { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
-  h1 { margin: 0 0 1rem; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.15; letter-spacing: -.04em; }
-  .lead { max-width: 42rem; margin: 0; font-size: 1.25rem; line-height: 1.65; }
-  .content { padding-block: clamp(2.5rem, 6vw, 4rem); }
-  .content :global(> *) { max-width: 48rem; }
-  .content :global(h2) { margin: 3rem 0 1rem; padding-top: 2rem; border-top: 1px solid var(--soft-blue); font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -.04em; }
-  .content :global(h2:first-child) { margin-top: 0; padding-top: 0; border: 0; }
-  .content :global(h3) { margin: 1.5rem 0 .75rem; font-size: 1.4rem; }
-  .content :global(p), .content :global(li) { font-size: 1.1rem; line-height: 1.65; }
-  .content :global(p) { margin: 0 0 1.25rem; }
-  .content :global(ol), .content :global(ul) { margin: 0 0 1.5rem; padding-left: 1.5rem; }
-  .content :global(li) { padding-left: .25rem; }
-  .content :global(li + li) { margin-top: .85rem; }
-  .content :global(li p) { margin: 0; }
-  .content :global(ol li::marker) { color: var(--blue-dark); font-weight: 700; }
-  .content :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
-  @media (max-width: 650px) {
-    .wrap { width: min(100% - 2rem, 1000px); }
-    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
-    .content :global(h2) { margin-top: 2rem; padding-top: 1.5rem; }
-  }
-</style>

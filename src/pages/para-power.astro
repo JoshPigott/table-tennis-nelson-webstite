@@ -1,28 +1,25 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { Image } from 'astro:assets';
 import playerPhoto from '../assets/para-power/wheelchair-table-tennis.png';
 import sessionPhoto from '../assets/para-power/players-together.png';
+import Container from '../components/Container.astro';
+import PageStatus from '../components/PageStatus.astro';
+import PageHeading from '../components/PageHeading.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import RichText from '../components/RichText.astro';
+import ContactBand from '../components/ContactBand.astro';
 ---
 
-<SiteLayout
-  title="Para Power – Table Tennis | Table Tennis Nelson"
-  description="Join Para Power table tennis for people with a physical or intellectual impairment. Thursdays, 4–5pm during school terms at Saxton Field, Nelson. $25 per term."
->
-  <p class="wrap page-status" id="para-power-status" role="status">Loading Para Power information...</p>
+<SiteLayout title="Para Power – Table Tennis | Table Tennis Nelson" description="Join Para Power table tennis for people with a physical or intellectual impairment. Thursdays, 4–5pm during school terms at Saxton Field, Nelson. $25 per term.">
+  <PageStatus id="para-power-status">Loading Para Power information...</PageStatus>
   <div id="para-power-page" hidden>
-    <header class="hero">
-      <Image src={playerPhoto} alt="Wheelchair table tennis players enjoying a game at the Nelson stadium" widths={[640, 960, 1280, 1600, 2048]} sizes="100vw" loading="eager" fetchpriority="high" quality={90} />
-      <div class="wrap hero-title"><h1 id="hero-title"></h1></div>
-    </header>
-
-    <article class="wrap content" id="main-content"></article>
-    <section class="contact-band" id="contact-band" aria-label="Benefits, contact and more information">
-      <div class="wrap story-row">
-        <div class="contact-copy" id="contact-content"></div>
-        <Image class="photo" src={sessionPhoto} alt="Two players smiling together beside the table tennis tables at the Nelson stadium" widths={[320, 640, 960]} sizes="(max-width: 650px) calc(100vw - 2rem), 476px" loading="lazy" quality={90} />
-      </div>
-    </section>
+    <PhotoHero src={playerPhoto} alt="Wheelchair table tennis players enjoying a game at the Nelson stadium" widths={[640, 960, 1280, 1600, 2048]} quality={90}>
+      <PageHeading hero id="hero-title" class="whitespace-pre-line" />
+    </PhotoHero>
+    <Container size="reading" mobileAt="650" class="pt-[clamp(3rem,6vw,5rem)] pb-[clamp(2rem,4vw,3rem)]">
+      <RichText as="article" id="main-content" lead />
+    </Container>
+    <ContactBand para label="Benefits, contact and more information" src={sessionPhoto} alt="Two players smiling together beside the table tennis tables at the Nelson stadium" />
   </div>
 </SiteLayout>
 
@@ -61,39 +58,3 @@ import sessionPhoto from '../assets/para-power/players-together.png';
 
   loadPage();
 </script>
-
-<style>
-  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
-  .page-status { padding-block: 3rem; }
-  h1 { margin: 0; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; letter-spacing: -.04em; white-space: pre-line; }
-  .content :global(h2), .contact-copy :global(h2) { margin: 2.5rem 0 1rem; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.03em; }
-  .content :global(h2:first-child), .contact-copy :global(h2:first-child) { margin-top: 0; }
-  .content :global(h3), .contact-copy :global(h3) { margin: 1.5rem 0 .75rem; font-size: 1.4rem; }
-  .content :global(p), .contact-copy :global(p) { margin: 0 0 1.25rem; font-size: 1.1rem; line-height: 1.65; }
-  .content :global(p:first-of-type) { font-size: 1.25rem; }
-  .content :global(a), .contact-copy :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
-  .hero { position: relative; height: 80svh; min-height: 480px; display: flex; align-items: end; overflow: hidden; background: var(--navy); }
-  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgb(0 0 0 / .72)); }
-  .hero :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-  .hero-title { position: relative; z-index: 1; padding-bottom: clamp(2rem, 6vw, 5rem); color: white; }
-  .content { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(2rem, 4vw, 3rem); }
-  .content :global(p) { max-width: 45rem; }
-  .contact-band { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
-  .story-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
-  .contact-copy :global(p:last-child) { margin-bottom: 0; }
-  .photo { display: block; width: 100%; height: auto; border-radius: 12px; }
-  .content :global(ul), .contact-copy :global(ul) { margin: 0 0 2rem; padding-left: 1.25rem; }
-  .content :global(li), .contact-copy :global(li) { font-size: 1.1rem; line-height: 1.65; }
-  .content :global(li + li), .contact-copy :global(li + li) { margin-top: .8rem; }
-  .contact-band[hidden] { display: none; }
-  @media (max-width: 650px) {
-    .wrap { width: min(100% - 2rem, 1000px); }
-    .contact-band { background: var(--paper); padding-top: 0; }
-    .hero { display: block; height: auto; min-height: 0; background: var(--pale-blue); }
-    .hero::after { display: none; }
-    .hero :global(img) { position: static; display: block; height: auto; object-fit: contain; }
-    .hero-title { padding-block: 1.5rem 2rem; color: var(--navy); }
-    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
-    .story-row { grid-template-columns: 1fr; gap: 1.5rem; }
-  }
-</style>

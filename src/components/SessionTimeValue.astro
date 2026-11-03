@@ -1,0 +1,7 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = HTMLAttributes<'span'> & { as?: 'span' | 'p'; };
+const { as: Tag = 'span', ...attributes } = Astro.props;
+---
+
+<Tag class="m-0 block text-2xl font-extrabold leading-[1.2] whitespace-nowrap tabular-nums max-[950px]:text-[1.375rem] max-[700px]:text-xl max-[700px]:whitespace-normal max-[700px]:[overflow-wrap:anywhere] max-[420px]:text-[1.1rem]" {...attributes}><slot /></Tag>

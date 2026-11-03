@@ -1,0 +1,15 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Container from './Container.astro';
+import RichText from './RichText.astro';
+interface Props { label: string; src: ImageMetadata; alt: string; para?: boolean; }
+const { label, src, alt, para = false } = Astro.props;
+---
+
+<section id="contact-band" aria-label={label} class:list={['bg-pale-blue py-[clamp(3rem,6vw,5rem)]', para && 'max-[650px]:bg-paper max-[650px]:pt-0']}>
+  <Container size="reading" mobileAt="650" class="grid grid-cols-2 items-center gap-[clamp(1.5rem,4vw,3rem)] max-[650px]:grid-cols-1 max-[650px]:gap-6">
+    <RichText id="contact-content" compactHeadings={!para} class="[&_p:last-child]:mb-0" />
+    <Image {src} {alt} widths={para ? [320, 640, 960] : undefined} sizes="(max-width: 650px) calc(100vw - 2rem), 476px" quality={para ? 90 : undefined} loading="lazy" class="block h-auto w-full rounded-xl" />
+  </Container>
+</section>

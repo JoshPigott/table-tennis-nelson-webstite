@@ -1,0 +1,7 @@
+---
+import Container from './Container.astro';
+interface Props { id: string; size?: 'wide' | 'medium' | 'reading'; mobileAt?: '600' | '650'; }
+const { id, size = 'reading', mobileAt = '650' } = Astro.props;
+---
+
+<Container as="p" {id} {size} {mobileAt} class="py-12" role="status"><slot /></Container>

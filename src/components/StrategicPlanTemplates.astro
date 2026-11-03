@@ -1,0 +1,19 @@
+---
+import Container from './Container.astro';
+---
+
+<template id="plan-overview-template">
+  <Container size="reading" mobileAt="650" class="py-[clamp(3rem,6vw,5rem)] [&>p]:mb-10 [&>p]:max-w-[45rem] [&>p]:text-xl" />
+</template>
+
+<template id="plan-columns-template">
+  <div class="grid grid-cols-[1.2fr_1fr] gap-[clamp(2rem,5vw,4rem)] [&_p:last-child]:mb-0 max-[650px]:grid-cols-1 max-[650px]:gap-7"></div>
+</template>
+
+<template id="plan-section-template">
+  <section class="group/section grid grid-cols-2 gap-x-12 gap-y-8 px-[max(1.5rem,calc((100%_-_1000px)/2))] py-[clamp(3rem,6vw,5rem)] data-[priority=false]:bg-pale-blue data-[priority=true]:block data-[priority=true]:[counter-reset:priority] [&>h2]:col-span-full [&>h2]:mb-0 [&>p]:col-span-full [&>p]:mb-0 max-[650px]:grid-cols-1 max-[650px]:gap-7 max-[650px]:px-4"></section>
+</template>
+
+<template id="plan-item-template">
+  <div class="border-t border-soft-blue pt-5 [&_p:last-child]:mb-0 [&>p>strong:only-child]:text-base [&>p>strong:only-child]:text-blue-dark group-data-[priority=true]/section:relative group-data-[priority=true]/section:mt-6 group-data-[priority=true]/section:pt-6 group-data-[priority=true]/section:pl-8 group-data-[priority=true]/section:[counter-increment:priority] group-data-[priority=true]/section:before:absolute group-data-[priority=true]/section:before:left-0 group-data-[priority=true]/section:before:text-[1.2rem] group-data-[priority=true]/section:before:font-bold group-data-[priority=true]/section:before:text-blue-dark group-data-[priority=true]/section:before:content-[counter(priority)_'.']"></div>
+</template>

@@ -1,0 +1,7 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = HTMLAttributes<'h1'> & { hero?: boolean; leading?: '1.1' | '1.15'; };
+const { hero = false, leading = hero ? '1.1' : '1.15', class: className, ...attributes } = Astro.props;
+---
+
+<h1 class:list={['text-[clamp(3rem,6vw,5rem)] font-bold tracking-[-.04em] max-[650px]:text-[clamp(2.25rem,10vw,3rem)]', hero ? 'm-0' : 'mt-0 mb-4', leading === '1.1' ? 'leading-[1.1]' : 'leading-[1.15]', className]} {...attributes}><slot /></h1>

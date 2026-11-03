@@ -4,82 +4,60 @@ import { Image } from 'astro:assets';
 import juniorGroup from '../assets/coaching/junior-group.webp';
 import dimitriBell from '../assets/coaching/dimitri-bell.webp';
 import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PageHeading from '../components/PageHeading.astro';
+import PageStatus from '../components/PageStatus.astro';
 ---
 
 <SiteLayout title="Coaching | Table Tennis Nelson" description="Junior group coaching, individual training, and the junior pathway at Table Tennis Nelson.">
-  <header class="page-intro">
-    <div class="wrap">
-      <h1 id="coaching-heading" data-field="pageHeading">Coaching</h1>
-      <p id="coaching-introduction" data-field="pageIntroduction" hidden></p>
-    </div>
-  </header>
-
-  <p class="wrap coaching-status" id="coaching-status" role="status">Loading coaching information…</p>
-
-  <section class="wrap section" aria-labelledby="after-school-title" hidden>
-    <div class="coaching-overview after-school-overview">
-      <div class="after-school-heading">
-        <h2 id="after-school-title" data-field="groupHeading"></h2>
-        <p class="section-intro" id="group-introduction" data-field="groupIntroduction"></p>
+  <PageIntro size="medium">
+    <PageHeading id="coaching-heading" data-field="pageHeading">Coaching</PageHeading>
+    <p id="coaching-introduction" data-field="pageIntroduction" hidden class="mt-0 mb-0 max-w-[42rem] text-[1.2rem] leading-[1.6]"></p>
+  </PageIntro>
+  <PageStatus id="coaching-status" size="medium" mobileAt="600">Loading coaching information…</PageStatus>
+  <Container as="section" size="medium" class="py-[clamp(3rem,6vw,5rem)]" aria-labelledby="after-school-title" hidden>
+    <div class="grid grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] items-stretch gap-x-[clamp(2rem,4vw,4rem)] [grid-template-areas:'heading_image'_'schedule_image'] max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[800px]:[grid-template-areas:'heading'_'image'_'schedule']">
+      <div class="[grid-area:heading]">
+        <h2 id="after-school-title" data-field="groupHeading" class="mt-0 mb-[.9rem] text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-.04em]"></h2>
+        <p id="group-introduction" data-field="groupIntroduction" class="mt-0 mb-[1.8rem] max-w-[44rem] text-[1.1rem] leading-[1.6] text-muted max-[800px]:mb-0"></p>
       </div>
-      <div class="after-school-schedule">
-        <div class="session-grid" id="coaching-sessions"></div>
-        <p class="contact-line" id="group-contact" hidden></p>
+      <div class="[grid-area:schedule]">
+        <div id="coaching-sessions" class="grid max-w-[760px] grid-cols-2 gap-4 max-[600px]:grid-cols-1 [&>div]:rounded-xl [&>div]:border [&>div]:border-soft-blue [&>div]:bg-pale-blue [&>div]:p-6 [&_h3]:mt-0 [&_h3]:mb-[.35rem] [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-[1.15] [&_h3]:tracking-[-.04em] [&_p]:m-0 [&_p]:text-xl [&_p]:font-extrabold [&_p]:leading-[1.6] [&_p]:text-blue-dark"></div>
+        <p id="group-contact" hidden class="mt-8 mb-0 leading-[1.6] [&_a]:font-bold [&_a]:text-blue-dark [&_a]:underline [&_a]:underline-offset-3"></p>
       </div>
-      <Image
-        class="coaching-photo after-school-photo"
-        src={juniorGroup}
-        alt="Junior players gathered around table tennis tables during a group session"
-        widths={[360, 540, 720, 1080]}
-        sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px"
-        loading="lazy"
-      />
+      <Image class="block h-full max-h-[400px] min-h-0 w-full rounded-xl object-cover [grid-area:image] max-[800px]:mx-auto max-[800px]:h-auto max-[800px]:w-[min(100%,540px)]" src={juniorGroup} alt="Junior players gathered around table tennis tables during a group session" widths={[360, 540, 720, 1080]} sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px" loading="lazy" />
     </div>
-  </section>
+  </Container>
 
-  <section class="individual" aria-labelledby="individual-title" hidden>
-    <div class="wrap coaching-overview">
+  <section class="bg-pale-blue py-[clamp(3rem,6vw,5rem)]" aria-labelledby="individual-title" hidden>
+    <Container size="medium" class="grid grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] items-stretch gap-[clamp(2rem,4vw,4rem)] max-[800px]:grid-cols-1">
       <div>
-        <h2 id="individual-title" data-field="individualHeading"></h2>
-        <p class="section-intro" id="individual-introduction" data-field="individualIntroduction"></p>
-        <div class="individual-details">
-          <p id="individual-details" data-field="individualDetails"></p>
-          <div class="contact-details" id="individual-contact" hidden>
+        <h2 id="individual-title" data-field="individualHeading" class="mt-0 mb-[.9rem] text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-.04em]"></h2>
+        <p id="individual-introduction" data-field="individualIntroduction" class="mt-0 mb-[1.8rem] max-w-[44rem] text-[1.1rem] leading-[1.6] text-muted"></p>
+        <div class="grid grid-cols-1 gap-6">
+          <p id="individual-details" data-field="individualDetails" class="m-0 leading-[1.6]"></p>
+          <div id="individual-contact" hidden class="flex flex-wrap gap-x-8 gap-y-4 [&_p]:m-0 [&_p]:leading-[1.6] [&_a]:font-bold [&_a]:text-blue-dark [&_a]:underline [&_a]:underline-offset-3">
             <p id="john-sms-row" hidden><strong>Text preferred</strong><br /><a id="john-sms"></a></p>
             <p id="john-email-row" hidden><strong>Email</strong><br /><a id="john-email"></a></p>
           </div>
         </div>
-        </div>
-        <Image
-          class="coaching-photo"
-          src={johnCoaching}
-          alt="John Jary feeding table tennis balls across the table during a coaching session"
-          widths={[360, 480, 598]}
-          sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px"
-          loading="lazy"
-        />
       </div>
-    </section>
-  
-    <section class="wrap section pathway" aria-labelledby="pathway-title" hidden>
-      <Image
-        class="coaching-photo pathway-photo"
-        src={dimitriBell}
-        alt="Nelson player Dimitri Bell preparing to return a table tennis ball"
-        widths={[360, 540, 720, 1080]}
-        sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px"
-        loading="lazy"
-      />
-      <div class="pathway-intro">
-        <h2 id="pathway-title" data-field="pathwayHeading"></h2>
-        <p class="section-intro" id="pathway-introduction" data-field="pathwayIntroduction"></p>
-      </div>
-  
-      <ol id="pathway-steps"></ol>
-    </section>
-  </SiteLayout>
+      <Image class="block h-full max-h-[400px] min-h-0 w-full rounded-xl object-cover max-[800px]:mx-auto max-[800px]:h-auto max-[800px]:w-[min(100%,540px)]" src={johnCoaching} alt="John Jary feeding table tennis balls across the table during a coaching session" widths={[360, 480, 598]} sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px" loading="lazy" />
+    </Container>
+  </section>
 
-  <script>
+  <Container as="section" size="medium" class="py-[clamp(3rem,6vw,5rem)] max-[800px]:flex max-[800px]:flex-col" aria-labelledby="pathway-title" hidden>
+    <Image class="float-right mt-0 mr-0 mb-6 ml-[clamp(2rem,4vw,4rem)] block h-auto w-[42%] rounded-xl object-contain max-[800px]:order-2 max-[800px]:float-none max-[800px]:mx-auto max-[800px]:w-[min(100%,540px)]" src={dimitriBell} alt="Nelson player Dimitri Bell preparing to return a table tennis ball" widths={[360, 540, 720, 1080]} sizes="(max-width: 800px) calc(100vw - 2rem), (max-width: 1150px) 45vw, 510px" loading="lazy" />
+    <div class="mb-2 max-[800px]:order-1">
+      <h2 id="pathway-title" data-field="pathwayHeading" class="mt-0 mb-[.9rem] text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.15] tracking-[-.04em]"></h2>
+      <p id="pathway-introduction" data-field="pathwayIntroduction" class="m-0 max-w-[44rem] text-[1.1rem] leading-[1.6] text-muted"></p>
+    </div>
+    <ol id="pathway-steps" class="m-0 list-decimal pl-8 max-[800px]:order-3 [&_li]:border-t [&_li]:border-soft-blue [&_li]:py-5 [&_li]:pl-2 [&_li]:[display:list-item_flow-root] [&_li:first-child]:pt-3 [&_li::marker]:font-extrabold [&_li::marker]:text-blue-dark [&_h3]:mt-0 [&_h3]:mb-[.35rem] [&_h3]:text-xl [&_h3]:font-bold [&_h3]:leading-[1.15] [&_h3]:tracking-[-.04em] [&_p]:m-0 [&_p]:leading-[1.6] [&_a]:font-bold [&_a]:text-blue-dark [&_a]:underline [&_a]:underline-offset-3"></ol>
+  </Container>
+</SiteLayout>
+
+<script>
     const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
     const byId = (id: string) => document.getElementById(id)!;
@@ -103,7 +81,7 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
         });
 
         byId('coaching-sessions').innerHTML = data.groupSessions
-          .map(({ day, time }: { day: string; time: string }) => `<div class="session"><h3>${escapeHtml(day)}</h3><p>${escapeHtml(time)}</p></div>`)
+          .map(({ day, time }: { day: string; time: string }) => `<div><h3>${escapeHtml(day)}</h3><p>${escapeHtml(time)}</p></div>`)
           .join('');
 
         const contacts = data.groupContactSection?.contacts ?? [];
@@ -149,63 +127,3 @@ import johnCoaching from '../assets/coaching/john-jary-coaching.webp';
 
     loadCoaching();
   </script>
-  
-  <style>
-    .wrap { width: min(100% - 3rem, 1100px); margin-inline: auto; }
-    h1, h2, h3, p { margin-top: 0; }
-    h1, h2, h3 { line-height: 1.15; letter-spacing: -.04em; }
-    h1 { margin-bottom: 1rem; font-size: clamp(3rem, 6vw, 5rem); }
-    h2 { margin-bottom: .9rem; font-size: clamp(2rem, 4vw, 3rem); }
-    h3 { margin-bottom: .35rem; font-size: 1.25rem; }
-    p { line-height: 1.6; }
-    a { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
-    .page-intro { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
-    .page-intro p { max-width: 42rem; margin-bottom: 0; font-size: 1.2rem; }
-    .coaching-status { margin-block: 3rem; }
-    .section { padding-block: clamp(3rem, 6vw, 5rem); }
-    .section-intro { max-width: 44rem; margin-bottom: 1.8rem; color: var(--muted); font-size: 1.1rem; }
-    .session-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 760px; }
-    .session-grid :global(.session) { padding: 1.5rem; border: 1px solid var(--soft-blue); border-radius: 12px; background: var(--pale-blue); }
-    .session-grid :global(.session h3) { margin: 0 0 .35rem; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; }
-    .session-grid :global(.session p) { margin: 0; color: var(--blue-dark); font-size: 1.25rem; font-weight: 800; line-height: 1.6; }
-    .contact-line { margin: 2rem 0 0; }
-    .contact-line :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
-    .coaching-overview { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 4vw, 4rem); align-items: stretch; }
-    .after-school-overview { grid-template-areas: 'heading image' 'schedule image'; row-gap: 0; }
-    .after-school-heading { grid-area: heading; }
-    .after-school-schedule { grid-area: schedule; }
-    .after-school-photo { grid-area: image; }
-    .coaching-photo { display: block; width: 100%; height: 100%; max-height: 400px; min-height: 0; object-fit: cover; border-radius: 12px; }
-    .pathway-intro { margin-bottom: .5rem; }
-    .pathway-photo { float: right; width: 42%; height: auto; max-height: none; object-fit: contain; margin: 0 0 1.5rem clamp(2rem, 4vw, 4rem); }
-    .pathway-intro .section-intro { margin-bottom: 0; }
-    .individual { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
-    .individual-details { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-    .individual-details > p { margin-bottom: 0; }
-    .contact-details { display: flex; flex-wrap: wrap; gap: 1rem 2rem; }
-    .contact-details[hidden], .contact-line[hidden] { display: none; }
-    .contact-details p { margin-bottom: 0; }
-    .pathway ol { margin: 0; padding-left: 2rem; }
-    .pathway ol :global(li) { display: list-item flow-root; padding: 1.25rem 0 1.25rem .5rem; border-top: 1px solid var(--soft-blue); }
-    .pathway ol :global(li:first-child) { padding-top: .75rem; }
-    .pathway ol :global(li::marker) { color: var(--blue-dark); font-weight: 800; }
-    .pathway ol :global(li h3) { margin: 0 0 .35rem; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.04em; }
-    .pathway ol :global(li p) { margin: 0; line-height: 1.6; }
-    .pathway ol :global(li a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; }
-    .pathway[hidden] { display: none; }
-    @media (max-width: 800px) {
-      .coaching-overview { grid-template-columns: 1fr; }
-      .after-school-overview { grid-template-areas: 'heading' 'image' 'schedule'; gap: 1.5rem; }
-      .after-school-heading .section-intro { margin-bottom: 0; }
-      .coaching-photo { width: min(100%, 540px); height: auto; margin-inline: auto; }
-      .pathway { display: flex; flex-direction: column; }
-      .pathway-intro { order: 1; }
-      .pathway-photo { order: 2; float: none; width: min(100%, 540px); margin: 0 auto 1.5rem; }
-      .pathway ol { order: 3; }
-    }
-    @media (max-width: 600px) {
-      .wrap { width: min(100% - 2rem, 1100px); }
-      .session-grid, .individual-details { grid-template-columns: 1fr; }
-      .contact-details { padding-left: 0; border-left: 0; }
-    }
-  </style>

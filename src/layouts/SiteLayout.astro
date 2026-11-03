@@ -1,89 +1,52 @@
 ---
+import '../styles/global.css';
+import Container from '../components/Container.astro';
+
+interface Props { title: string; description?: string; }
 const { title, description } = Astro.props;
 const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
+const navigation = [
+  ['/sessions/', 'Sessions & fees'],
+  ['/draws/', 'Draws'],
+  ['/coaching/', 'Coaching'],
+  ['/para-power/', 'Para Power'],
+  ['/ping-pong-parkinsons/', 'Ping Pong Parkinson’s'],
+];
+const footerLinks = [
+  ['/code-of-conduct/', 'Code of conduct'],
+  ['/strategic-plan/', 'Strategic plan'],
+  ['mailto:tabletennisnelson@outlook.com', 'Email us'],
+];
 ---
 
 <!doctype html>
-<html lang="en-NZ">
+<html lang="en-NZ" class="scroll-smooth [scrollbar-gutter:stable] motion-reduce:scroll-auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
   </head>
-  <body>
-    <header class="site-header">
-      <div class="wrap header-inner">
-        <a class="brand" href="/" aria-label="Table Tennis Nelson home">Table Tennis <strong>Nelson</strong></a>
-        <nav aria-label="Main navigation">
-          <a class="sessions-link" href="/sessions/">Sessions &amp; fees</a>
-          <a class="sessions-link" href="/draws/">Draws</a>
-          <a class="sessions-link" href="/coaching/">Coaching</a>
-          <a class="sessions-link" href="/para-power/">Para Power</a>
-          <a class="sessions-link" href="/ping-pong-parkinsons/">Ping Pong Parkinson’s</a>
+  <body class="m-0 flex min-h-screen flex-col bg-paper font-sans leading-[1.55] text-navy [&_a:focus-visible]:outline-[3px] [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-blue-dark [&_button:focus-visible]:outline-[3px] [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-blue-dark">
+    <header class="border-b border-soft-blue bg-paper">
+      <Container class="flex min-h-[84px] items-center justify-between gap-8 max-[780px]:min-h-[68px] max-[600px]:min-h-16 max-[600px]:flex-wrap max-[600px]:gap-[.4rem] max-[600px]:py-[.65rem] max-[380px]:gap-2">
+        <a class="flex items-center gap-[.3rem] text-[1.1rem] font-semibold tracking-[-.04em] whitespace-nowrap no-underline max-[600px]:text-[1.13rem] max-[380px]:text-[.95rem]" href="/" aria-label="Table Tennis Nelson home">Table Tennis <strong class="font-semibold">Nelson</strong></a>
+        <nav aria-label="Main navigation" class="flex flex-wrap gap-2 max-[600px]:w-full">
+          {navigation.map(([href, label]) => (
+            <a {href} class="inline-flex min-h-10 items-center rounded-md border border-blue px-[.9rem] py-[.4rem] text-[.9rem] font-bold text-blue-dark no-underline hover:bg-pale-blue max-[380px]:px-[.65rem]">{label}</a>
+          ))}
         </nav>
-      </div>
+      </Container>
     </header>
-
-    <main><slot /></main>
-
-    <footer>
-      <div class="wrap footer-inner">
+    <main class="flex-1"><slot /></main>
+    <footer class="bg-navy text-white">
+      <Container class="flex min-h-[98px] items-center justify-between gap-8 text-[.85rem] max-[600px]:flex-col max-[600px]:items-start max-[600px]:justify-center max-[600px]:gap-[.8rem] max-[600px]:py-6">
         <span>© {new Date().getFullYear()} Table Tennis Nelson</span>
-        <div>
-          <a href="/code-of-conduct/">Code of conduct</a>
-          <a href="/strategic-plan/">Strategic plan</a>
-          <a href="mailto:tabletennisnelson@outlook.com">Email us</a>
+        <div class="flex flex-wrap gap-[clamp(1rem,3vw,2.5rem)] [&_a]:text-[.92rem] [&_a]:font-bold [&_a]:no-underline [&_a:hover]:text-soft-blue max-[600px]:gap-x-6 max-[600px]:gap-y-3">
+          {footerLinks.map(([href, label]) => <a {href}>{label}</a>)}
           <a href={facebook} target="_blank" rel="noopener noreferrer">Find us on Facebook <span aria-hidden="true">↗</span></a>
         </div>
-      </div>
+      </Container>
     </footer>
   </body>
 </html>
-
-<style>
-  :global(:root) {
-    --navy: #173b68;
-    --blue: #0878bd;
-    --blue-dark: #075d96;
-    --paper: #ffffff;
-    --pale-blue: #f0f6fb;
-    --soft-blue: #dcebf6;
-    --muted: #486078;
-  }
-  :global(*) { box-sizing: border-box; }
-  :global(html) { scroll-behavior: smooth; scrollbar-gutter: stable; }
-  :global(body) { min-height: 100vh; margin: 0; display: flex; flex-direction: column; background: var(--paper); color: var(--navy); font-family: Arial, Helvetica, sans-serif; line-height: 1.55; }
-  :global(a) { color: inherit; }
-  :global(a:focus-visible), :global(button:focus-visible) { outline: 3px solid var(--blue-dark); outline-offset: 4px; }
-  main { flex: 1; }
-  .wrap { width: min(100% - 3rem, 1200px); margin-inline: auto; }
-  .header-inner, .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-  .site-header { border-bottom: 1px solid var(--soft-blue); background: var(--paper); }
-  .header-inner { min-height: 84px; }
-  .brand { display: flex; align-items: center; gap: .3rem; text-decoration: none; font-size: 1.1rem; font-weight: 600; letter-spacing: -.04em; white-space: nowrap; }
-  .brand strong { font-weight: 600; }
-  nav { display: flex; flex-wrap: wrap; gap: .5rem; }
-  .sessions-link { display: inline-flex; min-height: 40px; align-items: center; padding: .4rem .9rem; border: 1px solid var(--blue); border-radius: 6px; color: var(--blue-dark); font-size: .9rem; font-weight: 700; text-decoration: none; }
-  .sessions-link:hover { background: var(--pale-blue); }
-  footer { background: var(--navy); color: #fff; }
-  .footer-inner { min-height: 98px; font-size: .85rem; }
-  .footer-inner div { display: flex; flex-wrap: wrap; gap: clamp(1rem, 3vw, 2.5rem); }
-  footer a { text-decoration: none; font-size: .92rem; font-weight: 700; }
-  footer a:hover { color: var(--soft-blue); }
-  @media (max-width: 780px) { .header-inner { min-height: 68px; } }
-  @media (max-width: 600px) {
-    .wrap { width: min(100% - 2rem, 1200px); }
-    .header-inner { min-height: 64px; flex-wrap: wrap; gap: .4rem; padding-block: .65rem; }
-    .brand { font-size: 1.13rem; }
-    nav { width: 100%; }
-    .footer-inner { align-items: flex-start; flex-direction: column; justify-content: center; gap: .8rem; padding-block: 1.5rem; }
-    .footer-inner div { flex-wrap: wrap; gap: .75rem 1.5rem; }
-  }
-  @media (max-width: 380px) {
-    .header-inner { gap: .5rem; }
-    .brand { font-size: .95rem; }
-    .sessions-link { padding-inline: .65rem; }
-  }
-  @media (prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; } }
-</style>
