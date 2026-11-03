@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "draws",
+  "info": {
+    "singularName": "draw",
+    "pluralName": "draws",
+    "displayName": "Draws"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "document": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    }
+  }
+}
