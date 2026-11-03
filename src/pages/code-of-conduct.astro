@@ -1,0 +1,77 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout
+  title="Code of Conduct | Table Tennis Nelson"
+  description="Stadium rules and the code of conduct for players, members and visitors at Table Tennis Nelson."
+>
+  <p class="wrap page-status" id="conduct-status" role="status">Loading code of conduct...</p>
+  <div id="conduct-page" hidden>
+    <header class="page-intro">
+      <div class="wrap">
+        <h1 id="page-title"></h1>
+        <p class="lead" id="page-introduction"></p>
+      </div>
+    </header>
+    <article class="wrap content" id="page-content"></article>
+  </div>
+</SiteLayout>
+
+<script>
+  import MarkdownIt from 'markdown-it';
+
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+  const byId = (id: string) => document.getElementById(id)!;
+  const markdown = new MarkdownIt({ linkify: true });
+  markdown.disable('image');
+
+  async function loadPage() {
+    try {
+      if (!cmsUrl) throw new Error('Strapi URL is missing');
+      const response = await fetch(new URL('/api/code-of-conduct-page', cmsUrl), { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load code of conduct');
+      const { data } = await response.json();
+      if (!data?.title || !data?.content) throw new Error('Code of conduct page is incomplete');
+
+      byId('page-title').textContent = data.title;
+      byId('page-introduction').textContent = data.introduction || '';
+      byId('page-introduction').hidden = !data.introduction?.trim();
+      byId('page-content').innerHTML = markdown.render(data.content);
+      byId('conduct-page').hidden = false;
+      byId('conduct-status').hidden = true;
+    } catch (error) {
+      byId('conduct-status').textContent = 'The code of conduct is unavailable right now. Please try again later.';
+      console.warn('Could not load code of conduct from Strapi:', error);
+    }
+  }
+
+  loadPage();
+</script>
+
+<style>
+  .wrap { width: min(100% - 3rem, 1000px); margin-inline: auto; }
+  .page-status { padding-block: 3rem; }
+  .page-intro { padding-block: clamp(3rem, 6vw, 5rem); background: var(--pale-blue); }
+  h1 { margin: 0 0 1rem; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.15; letter-spacing: -.04em; }
+  .lead { max-width: 42rem; margin: 0; font-size: 1.25rem; line-height: 1.65; }
+  .content { padding-block: clamp(2.5rem, 6vw, 4rem); }
+  .content :global(> *) { max-width: 48rem; }
+  .content :global(h2) { margin: 3rem 0 1rem; padding-top: 2rem; border-top: 1px solid var(--soft-blue); font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -.04em; }
+  .content :global(h2:first-child) { margin-top: 0; padding-top: 0; border: 0; }
+  .content :global(h3) { margin: 1.5rem 0 .75rem; font-size: 1.4rem; }
+  .content :global(p), .content :global(li) { font-size: 1.1rem; line-height: 1.65; }
+  .content :global(p) { margin: 0 0 1.25rem; }
+  .content :global(ol), .content :global(ul) { margin: 0 0 1.5rem; padding-left: 1.5rem; }
+  .content :global(li) { padding-left: .25rem; }
+  .content :global(li + li) { margin-top: .85rem; }
+  .content :global(li p) { margin: 0; }
+  .content :global(ol li::marker) { color: var(--blue-dark); font-weight: 700; }
+  .content :global(a) { color: var(--blue-dark); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  @media (max-width: 650px) {
+    .wrap { width: min(100% - 2rem, 1000px); }
+    h1 { font-size: clamp(2.25rem, 10vw, 3rem); }
+    .content :global(h2) { margin-top: 2rem; padding-top: 1.5rem; }
+  }
+</style>

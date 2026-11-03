@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "code_of_conduct_pages",
+  "info": {
+    "singularName": "code-of-conduct-page",
+    "pluralName": "code-of-conduct-pages",
+    "displayName": "Code of conduct page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "introduction": {
+      "type": "text"
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

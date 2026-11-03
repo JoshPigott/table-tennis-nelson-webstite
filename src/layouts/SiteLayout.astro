@@ -30,6 +30,7 @@ const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
       <div class="wrap footer-inner">
         <span>© {new Date().getFullYear()} Table Tennis Nelson</span>
         <div>
+          <a href="/code-of-conduct/">Code of conduct</a>
           <a href="mailto:tabletennisnelson@outlook.com">Email us</a>
           <a href={facebook} target="_blank" rel="noopener noreferrer">Find us on Facebook <span aria-hidden="true">↗</span></a>
         </div>
@@ -65,7 +66,7 @@ const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
   .sessions-link:hover { background: var(--pale-blue); }
   footer { background: var(--navy); color: #fff; }
   .footer-inner { min-height: 98px; font-size: .85rem; }
-  .footer-inner div { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
+  .footer-inner div { display: flex; flex-wrap: wrap; gap: clamp(1rem, 3vw, 2.5rem); }
   footer a { text-decoration: none; font-size: .92rem; font-weight: 700; }
   footer a:hover { color: var(--soft-blue); }
   @media (max-width: 780px) { .header-inner { min-height: 68px; } }
