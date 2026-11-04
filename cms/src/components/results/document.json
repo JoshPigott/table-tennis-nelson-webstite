@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_results_documents",
+  "info": { "displayName": "Result document" },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "document": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    }
+  }
+}
