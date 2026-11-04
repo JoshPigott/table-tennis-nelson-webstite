@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "result_terms",
+  "info": {
+    "singularName": "result-term",
+    "pluralName": "result-terms",
+    "displayName": "Results by term"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "year": { "type": "integer", "required": true, "min": 1900, "max": 9999 },
+    "term": { "type": "integer", "required": true, "min": 1, "max": 4 },
+    "results": {
+      "type": "component",
+      "repeatable": true,
+      "component": "results.document",
+      "required": true,
+      "min": 1
+    }
+  }
+}

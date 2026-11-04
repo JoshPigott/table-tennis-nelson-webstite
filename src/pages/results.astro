@@ -1,0 +1,83 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PageHeading from '../components/PageHeading.astro';
+---
+
+<SiteLayout title="Results | Table Tennis Nelson" description="Find Thursday night competition results for Table Tennis Nelson, organised by term.">
+  <PageIntro>
+    <PageHeading>Results</PageHeading>
+    <p class="m-0 max-w-[42rem] text-xl leading-[1.65]">Thursday night competition results.</p>
+  </PageIntro>
+  <Container as="section" size="reading" mobileAt="650" class="py-[clamp(2.5rem,6vw,4rem)]" aria-label="Competition results">
+    <h2 id="results-term" class="mt-0 mb-6 text-section font-bold" hidden></h2>
+    <p id="results-status" role="status" class="m-0 text-[1.1rem] leading-[1.65]">Loading results...</p>
+    <ul id="results-list" class="m-0 list-none p-0"></ul>
+    <template id="result-template">
+      <li class="border-b border-soft-blue first:border-t">
+        <a class="flex items-center justify-between gap-6 py-6 text-[1.2rem] font-bold no-underline [overflow-wrap:anywhere] max-[650px]:gap-4 max-[650px]:pr-3 max-[650px]:text-[1.1rem]" target="_blank" rel="noopener noreferrer">
+          <span></span>
+          <span class="shrink-0 text-[.95rem] text-blue-dark underline underline-offset-3">View PDF</span>
+        </a>
+      </li>
+    </template>
+    <nav class="mt-8 flex flex-wrap items-center justify-center gap-4 [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_a]:rounded-md [&_a]:border [&_a]:border-blue-dark [&_a]:bg-paper [&_a]:px-4 [&_a]:py-2 [&_a]:font-bold [&_a]:text-blue-dark [&_a]:no-underline" id="results-pagination" aria-label="Results terms" hidden></nav>
+  </Container>
+</SiteLayout>
+
+<script>
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+  const status = document.getElementById('results-status')!;
+  const heading = document.getElementById('results-term')!;
+  const list = document.getElementById('results-list')!;
+  const template = document.getElementById('result-template') as HTMLTemplateElement;
+  const pagination = document.getElementById('results-pagination')!;
+  const requestedPage = Number(new URLSearchParams(location.search).get('page'));
+
+  async function loadResults() {
+    try {
+      const url = new URL('/api/result-terms?populate[results][populate]=document&sort[0]=year:desc&sort[1]=term:desc&sort[2]=id:desc&status=published&pagination[pageSize]=4', cmsUrl);
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load results');
+      const { data: terms } = await response.json();
+      if (!terms.length) {
+        status.textContent = 'Results will appear here when they are available.';
+        return;
+      }
+
+      const pageCount = terms.length;
+      const page = Math.min(Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1, pageCount);
+      const term = terms[page - 1];
+      if (requestedPage > pageCount) history.replaceState(null, '', `?page=${page}`);
+      for (const { title, document: file } of term.results) {
+        if (!title || !file?.url) continue;
+        const href = new URL(file.url, cmsUrl);
+        if (!['http:', 'https:'].includes(href.protocol)) continue;
+        const item = template.content.cloneNode(true) as DocumentFragment;
+        const link = item.querySelector('a')!;
+        link.href = href.href;
+        link.setAttribute('aria-label', `${title} (opens in a new tab)`);
+        link.firstElementChild!.textContent = title;
+        link.lastElementChild!.textContent = file.mime === 'application/pdf' ? 'View PDF' : 'View result';
+        list.append(item);
+      }
+
+      pagination.innerHTML = `
+        ${page > 1 ? `<a href="?page=${page - 1}">Next term</a>` : ''}
+        <span>Page ${page} of ${pageCount}</span>
+        ${page < pageCount ? `<a href="?page=${page + 1}">Previous term</a>` : ''}`;
+      heading.textContent = `Term ${term.term}, ${term.year}`;
+      heading.hidden = false;
+      pagination.hidden = pageCount <= 1;
+      status.textContent = 'Results for this term will appear here when they are available.';
+      status.hidden = list.childElementCount > 0;
+    } catch {
+      list.replaceChildren();
+      status.textContent = 'Results are unavailable right now. Please try again later.';
+    }
+  }
+
+  loadResults();
+</script>
