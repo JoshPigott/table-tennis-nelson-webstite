@@ -9,4 +9,11 @@
   --color-soft-blue: #dcebf6;
   --color-muted: #486078;
   --font-sans: Arial, Helvetica, sans-serif;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.65;
+  --text-section: clamp(1.5rem, 3vw, 2.25rem);
+  --text-section--line-height: 1.25;
+  --text-section--letter-spacing: -0.025em;
+  --text-subheading: 1.25rem;
+  --text-subheading--line-height: 1.35;
 }
