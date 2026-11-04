@@ -1,18 +1,17 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-type Props = HTMLAttributes<'div'> & { as?: 'div' | 'article'; variant?: 'community' | 'conduct' | 'plan'; lead?: boolean; compactHeadings?: boolean; };
-const { as: Tag = 'div', variant = 'community', lead = false, compactHeadings = false, class: className, ...attributes } = Astro.props;
+type Props = HTMLAttributes<'div'> & { as?: 'div' | 'article'; variant?: 'community' | 'conduct' | 'plan'; compactHeadings?: boolean; };
+const { as: Tag = 'div', variant = 'community', compactHeadings = false, class: className, ...attributes } = Astro.props;
 ---
 
 <!-- Descendant utilities also cover Markdown inserted by the CMS after page load. -->
 <Tag class:list={[
-  '[&_h2]:mb-4 [&_h2]:text-[clamp(1.75rem,3vw,2.5rem)] [&_h2]:font-bold [&_h3]:font-bold [&_p]:mb-5 [&_p]:text-[1.1rem] [&_p]:leading-[1.65] [&_li]:text-[1.1rem] [&_li]:leading-[1.65] [&_a]:font-bold [&_a]:text-blue-dark [&_a]:underline [&_a]:underline-offset-3 [&_a]:[overflow-wrap:anywhere] [&_ul]:list-disc [&_ol]:list-decimal',
-  variant !== 'conduct' && '[&_h2]:leading-[1.2] [&_h2]:tracking-[-.03em]',
-  variant !== 'plan' && '[&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:text-[1.4rem]',
+  'font-sans [&_h2]:mb-4 [&_h2]:text-section [&_h2]:font-bold [&_h3]:text-subheading [&_h3]:font-bold [&_p]:mb-5 [&_p]:text-body [&_li]:text-body [&_a]:font-bold [&_a]:text-blue-dark [&_a]:underline [&_a]:underline-offset-3 [&_a]:[overflow-wrap:anywhere] [&_ul]:list-disc [&_ol]:list-decimal',
+  variant !== 'plan' && '[&_h3]:mt-6 [&_h3]:mb-3',
   variant === 'community' && '[&_h2:first-child]:mt-0 [&_p]:max-w-[45rem] [&_ul]:mb-8 [&_ul]:pl-5 [&_li+li]:mt-[.8rem]',
   variant === 'community' && (compactHeadings ? '[&_h2]:mt-0' : '[&_h2]:mt-10'),
-  variant === 'conduct' && '[&>*]:max-w-[48rem] [&_h2]:mt-12 [&_h2]:border-t [&_h2]:border-soft-blue [&_h2]:pt-8 [&_h2]:leading-[1.15] [&_h2]:tracking-[-.04em] [&_h2:first-child]:mt-0 [&_h2:first-child]:border-0 [&_h2:first-child]:pt-0 [&_ol]:mb-6 [&_ol]:pl-6 [&_ul]:mb-6 [&_ul]:pl-6 [&_li]:pl-1 [&_li+li]:mt-[.85rem] [&_li_p]:m-0 [&_ol_li::marker]:font-bold [&_ol_li::marker]:text-blue-dark max-[650px]:[&_h2]:mt-8 max-[650px]:[&_h2]:pt-6',
-  variant === 'plan' && '[&_h3]:mt-0 [&_h3]:mb-[.6rem] [&_h3]:text-[1.3rem] [&_h3]:leading-[1.2] [&_h3]:tracking-[-.03em] [&_ul]:mb-6 [&_ul]:pl-6 [&_ol]:mb-6 [&_ol]:pl-6 [&_li+li]:mt-[.6rem] [&_blockquote]:my-6 [&_blockquote]:border-l-[3px] [&_blockquote]:border-soft-blue [&_blockquote]:pl-5 [&_hr]:my-8 [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-soft-blue',
-  lead && '[&_p:first-of-type]:text-xl',
+  variant === 'conduct' && '[&>*]:max-w-[48rem] [&_h2]:mt-12 [&_h2]:border-t [&_h2]:border-soft-blue [&_h2]:pt-8 [&_h2:first-child]:mt-0 [&_h2:first-child]:border-0 [&_h2:first-child]:pt-0 [&_ol]:mb-6 [&_ol]:pl-6 [&_ul]:mb-6 [&_ul]:pl-6 [&_li]:pl-1 [&_li+li]:mt-[.85rem] [&_li_p]:m-0 [&_ol_li::marker]:font-bold [&_ol_li::marker]:text-blue-dark max-[650px]:[&_h2]:mt-8 max-[650px]:[&_h2]:pt-6',
+  variant === 'conduct' && 'max-[650px]:[&_ul]:pl-5 max-[650px]:[&_ol]:pl-5 max-[650px]:[&_li]:pl-0 max-[650px]:[&_li+li]:mt-3 [&>p>strong:only-child]:font-normal',
+  variant === 'plan' && '[&_h3]:mt-0 [&_h3]:mb-3 [&_ul]:mb-6 [&_ul]:pl-6 [&_ol]:mb-6 [&_ol]:pl-6 [&_li+li]:mt-[.6rem] [&_blockquote]:my-6 [&_blockquote]:border-l-[3px] [&_blockquote]:border-soft-blue [&_blockquote]:pl-5 [&_hr]:my-8 [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-soft-blue',
   className,
 ]} {...attributes}><slot /></Tag>

@@ -9,7 +9,7 @@ type Props = HTMLAttributes<'div'> & {
 
 const { as: Tag = 'div', size = 'wide', mobileAt = '600', class: className, ...attributes } = Astro.props;
 const widths = { wide: 'max-w-[1200px]', medium: 'max-w-[1100px]', reading: 'max-w-[1000px]' };
-const mobileWidths = { '600': 'max-[600px]:w-[calc(100%_-_2rem)]', '650': 'max-[650px]:w-[calc(100%_-_2rem)]' };
+const mobileWidths = { '600': 'max-[600px]:w-[calc(100%_-_2.5rem)]', '650': 'max-[650px]:w-[calc(100%_-_2.5rem)]' };
 ---
 
 <Tag class:list={['mx-auto w-[calc(100%_-_3rem)]', widths[size], mobileWidths[mobileAt], className]} {...attributes}><slot /></Tag>
