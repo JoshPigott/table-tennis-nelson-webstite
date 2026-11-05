@@ -5,15 +5,24 @@ import Container from '../components/Container.astro';
 interface Props { title: string; description?: string; }
 const { title, description } = Astro.props;
 const facebook = 'https://www.facebook.com/TableTennisNelsonPage/';
-const navigation = [
+const currentPath = Astro.url.pathname;
+const playLinks = [
   ['/sessions/', 'Sessions & fees'],
-  ['/draws/', 'Draws'],
-  ['/results/', 'Results'],
   ['/coaching/', 'Coaching'],
   ['/para-power/', 'Para Power'],
   ['/ping-pong-parkinsons/', 'Ping Pong Parkinson’s'],
-  ['/contact/', 'Contact'],
 ];
+const competitionLinks = [['/draws/', 'Draws'], ['/results/', 'Results']];
+const navigationGroups = [
+  { label: 'Competition', links: competitionLinks },
+  { label: 'Our club', links: [
+    ['/bookings/', 'Venue bookings'],
+    ['/strategic-plan/', 'Strategic plan'],
+    ['/code-of-conduct/', 'Code of conduct'],
+    ['/complaints/', 'Complaints'],
+  ] },
+];
+const directLinks = [['/contact/', 'Contact']];
 const footerLinks = [
   ['/bookings/', 'Venue bookings'],
   ['/code-of-conduct/', 'Code of conduct'],
@@ -32,25 +41,101 @@ const footerLinks = [
     <title>{title}</title>
   </head>
   <body class="m-0 flex min-h-screen flex-col bg-paper font-sans leading-[1.55] text-navy [&_a:focus-visible]:outline-[3px] [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-blue-dark [&_button:focus-visible]:outline-[3px] [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-blue-dark">
-    <header class="border-b border-soft-blue bg-paper">
-      <Container class="flex min-h-[84px] items-center justify-between gap-8 max-[780px]:min-h-[68px] max-[600px]:min-h-16 max-[600px]:flex-wrap max-[600px]:gap-[.4rem] max-[600px]:py-[.65rem] max-[380px]:gap-2">
-        <a class="flex items-center gap-[.3rem] text-[1.1rem] font-semibold tracking-[-.04em] whitespace-nowrap no-underline max-[600px]:text-[1.13rem] max-[380px]:text-[.95rem]" href="/" aria-label="Table Tennis Nelson home">Table Tennis <strong class="font-semibold">Nelson</strong></a>
-        <nav aria-label="Main navigation" class="flex flex-wrap gap-2 max-[600px]:w-full">
-          {navigation.map(([href, label]) => (
-            <a {href} class="inline-flex min-h-10 items-center rounded-md border border-blue px-[.9rem] py-[.4rem] text-[.9rem] font-bold text-blue-dark no-underline hover:bg-pale-blue max-[380px]:px-[.65rem]">{label}</a>
+    <a href="#site-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-3">Skip to content</a>
+    <header class="relative z-20 border-b border-soft-blue bg-paper">
+      <Container class="flex min-h-20 items-center justify-between gap-6 py-3 min-[1100px]:min-h-24">
+        <a class="shrink-0 text-[1.15rem] font-bold leading-tight tracking-[-.035em] whitespace-nowrap no-underline" href="/" aria-label="Table Tennis Nelson home">Table Tennis Nelson</a>
+        <nav aria-label="Main navigation" class="hidden items-center gap-6 min-[1100px]:flex">
+          {playLinks.map(([href, label]) => (
+            <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['inline-flex min-h-11 items-center border-b-2 py-2 text-[.9rem] font-semibold no-underline transition-colors hover:border-blue hover:text-blue-dark', currentPath === href ? 'border-blue text-blue-dark' : 'border-transparent text-navy']}>{label}</a>
+          ))}
+          {navigationGroups.map(({ label, links }) => (
+            <details name="desktop-navigation" class="group/dropdown relative">
+              <summary class:list={['flex min-h-11 cursor-pointer list-none items-center gap-2 border-b-2 py-2 text-[.9rem] font-semibold hover:border-blue hover:text-blue-dark focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-blue-dark [&::-webkit-details-marker]:hidden', links.some(([href]) => currentPath === href) ? 'border-blue text-blue-dark' : 'border-transparent']}>
+                {label}
+                <svg class="size-3.5 group-open/dropdown:rotate-180" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </summary>
+              <div class="absolute top-full right-0 mt-2 w-64 rounded-lg border border-soft-blue bg-white p-2 shadow-lg">
+                {links.map(([href, linkLabel]) => <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['block rounded-md px-3 py-3 text-[.95rem] no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'text-navy']}>{linkLabel}</a>)}
+              </div>
+            </details>
+          ))}
+          {directLinks.map(([href, label]) => (
+            <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['inline-flex min-h-11 items-center border-b-2 py-2 text-[.9rem] font-semibold no-underline transition-colors hover:border-blue hover:text-blue-dark', currentPath === href ? 'border-blue text-blue-dark' : 'border-transparent text-navy']}>{label}</a>
           ))}
         </nav>
+        <details class="group min-[1100px]:hidden">
+          <summary class="flex min-h-11 cursor-pointer list-none items-center gap-3 rounded-md border border-soft-blue px-4 py-2 font-semibold hover:bg-pale-blue focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-blue-dark [&::-webkit-details-marker]:hidden">
+            Menu
+            <svg class="size-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </summary>
+          <nav aria-label="Mobile navigation" class="absolute inset-x-0 top-full max-h-[calc(100svh-5rem)] overflow-y-auto border-b border-soft-blue bg-white px-5 py-3 shadow-lg">
+            {playLinks.map(([href, label]) => (
+              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-medium text-navy']}>{label}</a>
+            ))}
+            {navigationGroups.map(({ label, links }) => (
+              <details name="mobile-navigation-group" class="group/submenu mx-auto max-w-[1200px] border-b border-soft-blue">
+                <summary class:list={['flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-3 py-3 font-semibold hover:text-blue-dark focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-dark [&::-webkit-details-marker]:hidden', links.some(([href]) => currentPath === href) && 'text-blue-dark']}>
+                  {label}
+                  <svg class="size-4 group-open/submenu:rotate-180" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </summary>
+                <div class="pb-2 pl-3">
+                  {links.map(([href, linkLabel]) => <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['block rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'text-muted']}>{linkLabel}</a>)}
+                </div>
+              </details>
+            ))}
+            {directLinks.map(([href, label]) => (
+              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-medium text-navy']}>{label}</a>
+            ))}
+          </nav>
+        </details>
       </Container>
     </header>
-    <main class="flex-1"><slot /></main>
+    <main id="site-content" class="flex-1"><slot /></main>
     <footer class="bg-navy text-white">
-      <Container class="flex min-h-[98px] items-center justify-between gap-8 text-[.85rem] max-[600px]:flex-col max-[600px]:items-start max-[600px]:justify-center max-[600px]:gap-[.8rem] max-[600px]:py-6">
-        <span>© {new Date().getFullYear()} Table Tennis Nelson</span>
-        <div class="flex flex-wrap gap-[clamp(1rem,3vw,2.5rem)] [&_a]:text-[.92rem] [&_a]:font-bold [&_a]:no-underline [&_a:hover]:text-soft-blue max-[600px]:gap-x-6 max-[600px]:gap-y-3">
-          {footerLinks.map(([href, label]) => <a {href}>{label}</a>)}
-          <a href={facebook} target="_blank" rel="noopener noreferrer">Find us on Facebook <span aria-hidden="true">↗</span></a>
+      <Container class="pt-12 pb-6 [&_a:focus-visible]:outline-white">
+        <div class="grid grid-cols-2 gap-x-8 gap-y-10 pb-10 min-[950px]:grid-cols-[1.1fr_.9fr_.9fr_1.4fr]">
+          <div class="col-span-2 min-[950px]:col-span-1">
+            <a href="/" class="inline-block text-2xl font-bold leading-tight tracking-[-.035em] no-underline" aria-label="Table Tennis Nelson home">Table Tennis<br />Nelson</a>
+            <p class="mt-4 mb-0 max-w-[20rem] text-[.95rem] leading-relaxed text-soft-blue">A place to play, meet people and enjoy table tennis in Nelson.</p>
+          </div>
+          <nav aria-labelledby="footer-play-heading" class="[&_a]:block [&_a]:py-1.5 [&_a]:text-[.95rem] [&_a]:text-soft-blue [&_a]:no-underline [&_a:hover]:text-white [&_a:hover]:underline [&_a:hover]:underline-offset-4">
+            <h2 id="footer-play-heading" class="mt-0 mb-3 text-base font-bold">Come and play</h2>
+            {[...playLinks, ...competitionLinks].map(([href, label]) => <a {href}>{label}</a>)}
+          </nav>
+          <nav aria-labelledby="footer-club-heading" class="[&_a]:block [&_a]:py-1.5 [&_a]:text-[.95rem] [&_a]:text-soft-blue [&_a]:no-underline [&_a:hover]:text-white [&_a:hover]:underline [&_a:hover]:underline-offset-4">
+            <h2 id="footer-club-heading" class="mt-0 mb-3 text-base font-bold">Our club</h2>
+            {footerLinks.map(([href, label]) => <a {href}>{label}</a>)}
+          </nav>
+          <div class="col-span-2 min-w-0 min-[950px]:col-span-1">
+            <h2 class="mt-0 mb-4 text-base font-bold">Get in touch</h2>
+            <a href="mailto:tabletennisnelson@outlook.com" class="mb-3 block text-[.95rem] text-soft-blue no-underline [overflow-wrap:anywhere] hover:text-white hover:underline hover:underline-offset-4">tabletennisnelson@outlook.com</a>
+            <a href="tel:+64273463996" class="text-[.95rem] text-soft-blue no-underline hover:text-white hover:underline hover:underline-offset-4">027 346 3996</a>
+            <address class="mt-5 text-[.95rem] leading-relaxed text-soft-blue not-italic">Saxton Field<br />142 Saxton Road, Stoke, Nelson</address>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-4 border-t border-white/20 pt-6 text-sm text-soft-blue">
+          <span>© {new Date().getFullYear()} Table Tennis Nelson</span>
+          <a href={facebook} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center gap-2 text-soft-blue no-underline hover:text-white hover:underline hover:underline-offset-4">Find us on Facebook <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
         </div>
       </Container>
     </footer>
   </body>
 </html>
+
+<script>
+  const menus = document.querySelectorAll<HTMLDetailsElement>('header details');
+  document.addEventListener('click', event => {
+    menus.forEach(menu => {
+      if (!menu.contains(event.target as Node)) menu.open = false;
+    });
+  });
+  document.querySelector('header')!.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const menu = (event.target as HTMLElement).closest<HTMLDetailsElement>('details[open]');
+    if (menu) {
+      menu.open = false;
+      menu.querySelector('summary')!.focus();
+    }
+  });
+</script>
