@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PageHeading from '../components/PageHeading.astro';
+---
+
+<SiteLayout title="Contact | Table Tennis Nelson" description="Contact Table Tennis Nelson for enquiries, venue bookings and information about playing at Saxton Field, Stoke, Nelson.">
+  <PageIntro size="medium">
+    <PageHeading>Contact us</PageHeading>
+    <p class="m-0 max-w-[42rem] text-xl leading-[1.65]">Have a question about playing, joining or hiring the venue? Get in touch.</p>
+  </PageIntro>
+
+  <Container size="medium" mobileAt="650" class="grid gap-10 py-12 min-[800px]:grid-cols-2">
+    <div>
+      <section aria-labelledby="email-heading" class="mb-10">
+        <h2 id="email-heading" class="mt-0 mb-3 text-section font-bold">Get in touch</h2>
+        <p class="mt-0 mb-4 text-body text-muted">For general enquiries, call or email us.</p>
+        <div class="flex flex-col items-start gap-3">
+          <a href="mailto:tabletennisnelson@outlook.com" class="text-xl text-blue-dark underline underline-offset-4 [overflow-wrap:anywhere]">tabletennisnelson@outlook.com</a>
+          <a href="tel:+64273463996" class="text-xl text-blue-dark underline underline-offset-4">027 346 3996</a>
+        </div>
+      </section>
+
+      <section aria-labelledby="visit-heading" class="mb-10">
+        <h2 id="visit-heading" class="mt-0 mb-3 text-section font-bold">Visit us</h2>
+        <address class="mb-4 text-body not-italic">Table Tennis Nelson<br />Saxton Field<br />142 Saxton Road<br />Stoke, Nelson</address>
+        <p class="mt-0 mb-4 text-muted">Check our <a href="/sessions/" class="text-blue-dark underline underline-offset-3">session times</a> before you visit.</p>
+        <a href="https://www.google.com/maps/search/?api=1&query=Table+Tennis+Nelson%2C+142+Saxton+Road%2C+Stoke%2C+Nelson" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-12 items-center justify-center rounded-md bg-blue px-5 py-3 font-medium text-white no-underline hover:bg-blue-dark">Get directions<span class="sr-only"> (opens in a new tab)</span></a>
+      </section>
+
+      <section aria-labelledby="facebook-heading">
+        <h2 id="facebook-heading" class="mt-0 mb-3 text-xl font-bold">Keep in touch</h2>
+        <a href="https://www.facebook.com/TableTennisNelsonPage/" target="_blank" rel="noopener noreferrer" class="text-blue-dark underline underline-offset-3">Find us on Facebook<span class="sr-only"> (opens in a new tab)</span></a>
+      </section>
+    </div>
+
+    <iframe title="Map showing Table Tennis Nelson at Saxton Field" src="https://www.google.com/maps?q=Table+Tennis+Nelson%2C+142+Saxton+Road%2C+Stoke%2C+Nelson%2C+New+Zealand&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="h-[400px] w-full rounded-xl border-0 bg-pale-blue min-[800px]:h-full min-[800px]:min-h-[500px]"></iframe>
+  </Container>
+
+</SiteLayout>
