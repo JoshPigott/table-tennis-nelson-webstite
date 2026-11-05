@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "booking_pages",
+  "info": {
+    "singularName": "booking-page",
+    "pluralName": "booking-pages",
+    "displayName": "Venue bookings"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "title": { "type": "string", "required": true, "default": "Venue bookings" },
+    "introduction": { "type": "text", "default": "Download the booking form, complete your details, read the conditions of hire and sign it." },
+    "downloadLabel": { "type": "string", "required": true, "default": "Download booking form (PDF)" },
+    "bookingForm": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["files"] },
+    "submissionInstructions": { "type": "richtext", "default": "Email your completed, signed form to [tabletennisnelson@outlook.com](mailto:tabletennisnelson@outlook.com)." },
+    "confirmationNote": { "type": "text", "default": "We’ll confirm availability and agree the hire fee with you before your booking goes ahead." },
+    "address": { "type": "string", "default": "142 Saxton Road, Stoke, Nelson" },
+    "description": { "type": "text", "default": "Download the facility booking form to hire the Saxton table tennis rooms." }
+  }
+}
