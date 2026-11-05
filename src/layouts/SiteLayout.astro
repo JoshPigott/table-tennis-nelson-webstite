@@ -43,8 +43,8 @@ const footerLinks = [
   <body class="m-0 flex min-h-screen flex-col bg-paper font-sans leading-[1.55] text-navy [&_a:focus-visible]:outline-[3px] [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-blue-dark [&_button:focus-visible]:outline-[3px] [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-blue-dark">
     <a href="#site-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-3">Skip to content</a>
     <header class="relative z-20 border-b border-soft-blue bg-paper">
-      <Container class="flex min-h-20 items-center justify-between gap-6 py-3 min-[1100px]:min-h-24">
-        <a class="shrink-0 text-[1.15rem] font-bold leading-tight tracking-[-.035em] whitespace-nowrap no-underline" href="/" aria-label="Table Tennis Nelson home">Table Tennis Nelson</a>
+      <Container class="flex min-h-20 items-center justify-between gap-3 py-3 min-[1100px]:min-h-24 min-[1100px]:gap-6">
+        <a class="shrink-0 text-base font-bold leading-tight tracking-[-.035em] whitespace-nowrap no-underline min-[380px]:text-[1.15rem]" href="/" aria-label="Table Tennis Nelson home">Table Tennis Nelson</a>
         <nav aria-label="Main navigation" class="hidden items-center gap-6 min-[1100px]:flex">
           {playLinks.map(([href, label]) => (
             <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['inline-flex min-h-11 items-center border-b-2 py-2 text-[.9rem] font-semibold no-underline transition-colors hover:border-blue hover:text-blue-dark', currentPath === href ? 'border-blue text-blue-dark' : 'border-transparent text-navy']}>{label}</a>
@@ -65,13 +65,15 @@ const footerLinks = [
           ))}
         </nav>
         <details class="group min-[1100px]:hidden">
-          <summary class="flex min-h-11 cursor-pointer list-none items-center gap-3 rounded-md border border-soft-blue px-4 py-2 font-semibold hover:bg-pale-blue focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-blue-dark [&::-webkit-details-marker]:hidden">
-            Menu
-            <svg class="size-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <summary class="flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-md bg-navy px-3 py-3 text-sm font-medium text-white hover:bg-blue-dark group-open:bg-blue-dark focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-blue-dark min-[380px]:px-4 min-[380px]:text-base [&::-webkit-details-marker]:hidden">
+            <svg class="size-5 group-open:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            <svg class="hidden size-5 group-open:block" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            <span class="group-open:hidden">Menu</span>
+            <span class="hidden group-open:inline">Close</span>
           </summary>
-          <nav aria-label="Mobile navigation" class="absolute inset-x-0 top-full max-h-[calc(100svh-5rem)] overflow-y-auto border-b border-soft-blue bg-white px-5 py-3 shadow-lg">
+          <nav aria-label="Mobile navigation" class="absolute inset-x-0 top-full max-h-[calc(100svh-5rem)] overflow-y-auto border-b border-soft-blue bg-white px-5 py-3 text-[1.05rem] shadow-lg">
             {playLinks.map(([href, label]) => (
-              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-medium text-navy']}>{label}</a>
+              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-semibold text-navy']}>{label}</a>
             ))}
             {navigationGroups.map(({ label, links }) => (
               <details name="mobile-navigation-group" class="group/submenu mx-auto max-w-[1200px] border-b border-soft-blue">
@@ -80,12 +82,12 @@ const footerLinks = [
                   <svg class="size-4 group-open/submenu:rotate-180" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                 </summary>
                 <div class="pb-2 pl-3">
-                  {links.map(([href, linkLabel]) => <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['block rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'text-muted']}>{linkLabel}</a>)}
+                  {links.map(([href, linkLabel]) => <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['block rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-semibold text-navy']}>{linkLabel}</a>)}
                 </div>
               </details>
             ))}
             {directLinks.map(([href, label]) => (
-              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-medium text-navy']}>{label}</a>
+              <a {href} aria-current={currentPath === href ? 'page' : undefined} class:list={['mx-auto block max-w-[1200px] rounded-md px-3 py-3 no-underline hover:bg-pale-blue', currentPath === href ? 'bg-pale-blue font-bold text-blue-dark' : 'font-semibold text-navy']}>{label}</a>
             ))}
           </nav>
         </details>
