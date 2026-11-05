@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Container from '../components/Container.astro';
+import RichText from '../components/RichText.astro';
+import stadiumPhoto from '../assets/bookings/hall.webp';
+---
+
+<SiteLayout title="Venue bookings | Table Tennis Nelson" description="Download the facility booking form to hire the Saxton table tennis rooms.">
+  <Container as="section" size="medium" mobileAt="650" class="grid items-center gap-x-8 gap-y-5 py-12 min-[800px]:grid-cols-2" aria-labelledby="booking-title">
+    <h1 id="booking-title" data-field="title" class="m-0 text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-[1.08] tracking-[-.04em] min-[800px]:self-end">Venue bookings</h1>
+    <Image src={stadiumPhoto} alt="A wide view of the Saxton table tennis hall with tables set up and people playing" widths={[390, 640, 960, 1280]} sizes="(max-width: 800px) calc(100vw - 2.5rem), 550px" loading="eager" class="aspect-[5/4] h-auto w-full rounded-xl object-cover object-[center_60%] min-[800px]:col-start-2 min-[800px]:row-span-2 min-[800px]:row-start-1" />
+    <div class="min-[800px]:col-start-1 min-[800px]:row-start-2 min-[800px]:self-start">
+      <p data-field="introduction" class="mt-0 mb-6 text-body">Download the booking form, complete your details, read the conditions of hire and sign it.</p>
+      <a id="booking-document" href="/documents/ttn-facility-booking-form.pdf" download target="_blank" rel="noopener noreferrer" class="inline-flex min-h-12 items-center justify-center rounded-md bg-blue px-5 py-3 font-medium text-white no-underline hover:bg-blue-dark"><span data-field="downloadLabel">Download booking form (PDF)</span><span class="sr-only"> (opens in a new tab)</span></a>
+      <RichText id="booking-instructions" class="mt-6 mb-4 text-muted [&>p:last-child]:mb-0">
+        <p class="mt-0">Email your completed, signed form to <a href="mailto:tabletennisnelson@outlook.com">tabletennisnelson@outlook.com</a>.</p>
+      </RichText>
+      <p data-field="confirmationNote" class="mt-0 mb-5 text-muted">We’ll confirm availability and agree the hire fee with you before your booking goes ahead.</p>
+    </div>
+  </Container>
+</SiteLayout>
+
+<script>
+  import MarkdownIt from 'markdown-it';
+
+  const markdown = new MarkdownIt({ linkify: true });
+  markdown.disable('image');
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+
+  async function loadPage() {
+    if (!cmsUrl) return;
+    try {
+      const response = await fetch(new URL('/api/booking-page?populate=bookingForm', cmsUrl), { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load venue bookings');
+      const { data } = await response.json();
+      if (!data) return;
+      document.querySelectorAll<HTMLElement>('[data-field]').forEach(element => {
+        element.textContent = data[element.dataset.field!] || '';
+        element.hidden = !element.textContent.trim();
+      });
+      if (data.title) document.title = `${data.title} | Table Tennis Nelson`;
+      if (data.description !== undefined) document.querySelector('meta[name="description"]')!.setAttribute('content', data.description || '');
+      const instructions = document.getElementById('booking-instructions')!;
+      instructions.innerHTML = markdown.render(data.submissionInstructions || '');
+      instructions.hidden = !data.submissionInstructions?.trim();
+      if (data.bookingForm?.url) {
+        const url = new URL(data.bookingForm.url, cmsUrl);
+        if (['http:', 'https:'].includes(url.protocol)) {
+          (document.getElementById('booking-document') as HTMLAnchorElement).href = url.href;
+        }
+      }
+    } catch (error) {
+      console.warn('Could not load venue bookings from Strapi; using the default content:', error);
+    }
+  }
+
+  loadPage();
+</script>
