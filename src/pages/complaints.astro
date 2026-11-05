@@ -16,7 +16,7 @@ import PageHeading from '../components/PageHeading.astro';
       <section class="mb-8" aria-labelledby="policy-heading">
         <h2 id="policy-heading" class="mt-0 mb-3 text-section font-bold">Before you begin</h2>
         <p class="mt-0 mb-4 text-body">For a minor concern, try to resolve it informally first where it is safe and appropriate. A formal complaint is appropriate for a serious issue, or where informal resolution is unsafe or has not worked.</p>
-        <a class="font-bold text-blue-dark underline underline-offset-3" href="/documents/ttn-complaints-policy.pdf" target="_blank" rel="noopener noreferrer">Read our complaints policy (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
+        <a id="policy-document" class="font-bold text-blue-dark underline underline-offset-3" href="/documents/ttn-complaints-policy.pdf" target="_blank" rel="noopener noreferrer">Read our complaints policy (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
       </section>
 
       <aside id="form-notice" class="mb-8 rounded-lg border border-soft-blue bg-pale-blue p-5">
@@ -142,6 +142,28 @@ import PageHeading from '../components/PageHeading.astro';
 </SiteLayout>
 
 <script>
+  const localSite = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const cmsUrl = import.meta.env.PUBLIC_STRAPI_URL || (localSite ? 'http://localhost:1337' : '');
+
+  async function loadPolicy() {
+    if (!cmsUrl) return;
+    try {
+      const response = await fetch(new URL('/api/complaints-page?populate=policyDocument', cmsUrl), { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load complaints policy');
+      const { data } = await response.json();
+      if (data?.policyDocument?.url) {
+        const url = new URL(data.policyDocument.url, cmsUrl);
+        if (['http:', 'https:'].includes(url.protocol)) {
+          (document.getElementById('policy-document') as HTMLAnchorElement).href = url.href;
+        }
+      }
+    } catch (error) {
+      console.warn('Could not load the policy from Strapi; using the bundled PDF:', error);
+    }
+  }
+
+  loadPolicy();
+
   // Keep this preview local until complaint delivery is connected.
   const form = document.getElementById('complaint-form')!;
   form.addEventListener('submit', event => event.preventDefault());

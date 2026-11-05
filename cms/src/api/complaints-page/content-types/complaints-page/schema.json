@@ -1,0 +1,13 @@
+{
+  "kind": "singleType",
+  "collectionName": "complaints_pages",
+  "info": {
+    "singularName": "complaints-page",
+    "pluralName": "complaints-pages",
+    "displayName": "Complaints page"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "policyDocument": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["files"] }
+  }
+}
