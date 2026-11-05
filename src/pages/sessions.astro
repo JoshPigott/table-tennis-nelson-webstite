@@ -37,10 +37,17 @@ import SessionCardTemplate from '../components/SessionCardTemplate.astro';
       <h1 id="programme-title" class="mt-0 mb-10 text-[clamp(3rem,6vw,5rem)] font-bold leading-[1.1] tracking-[-.04em] max-[600px]:mb-8">Sessions</h1>
       <p id="session-status" role="status" class="my-4">Loading sessions…</p>
       <div id="day-list" hidden data-photos={JSON.stringify(sessionPhotos.map((photo) => photo.src))}>
+        <nav id="day-navigation" aria-label="Jump to a day" class="mb-10 max-[700px]:mb-8">
+          <div class="grid grid-cols-2 gap-2 min-[450px]:grid-cols-4 min-[1000px]:grid-cols-7">
+            {weekdays.map(([name, key]) => (
+              <a href={'#day-' + key} class="flex min-h-12 items-center justify-center rounded-md bg-navy px-3 py-3 font-semibold text-white no-underline transition-colors hover:bg-blue-dark">{name}</a>
+            ))}
+          </div>
+        </nav>
         {weekdays.map(([name, key]) => (
-          <section class="mb-10 last:mb-0 max-[700px]:mb-8" data-day={key} aria-labelledby={'day-' + key}>
+          <section id={'day-' + key} tabindex="-1" class="mb-10 scroll-mt-4 last:mb-0 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-blue-dark max-[700px]:mb-8" data-day={key} aria-labelledby={'day-' + key + '-heading'}>
             <header class="sticky top-0 z-2 flex items-center justify-between gap-4 border-b border-[#e4e5e7] bg-[#f7f7f7] px-6 py-[1.2rem] max-[700px]:px-0 max-[700px]:py-4">
-              <h2 id={'day-' + key} class="m-0 text-[1.8rem] font-bold leading-[1.1] tracking-[-.04em] max-[700px]:text-2xl">{name}</h2>
+              <h2 id={'day-' + key + '-heading'} class="m-0 text-[1.8rem] font-bold leading-[1.1] tracking-[-.04em] max-[700px]:text-2xl">{name}</h2>
               <span data-day-count class="text-[.85rem] whitespace-nowrap text-muted"></span>
             </header>
             <div data-session-list class="pt-2 max-[700px]:grid max-[700px]:gap-4 max-[700px]:pt-4"></div>
@@ -196,6 +203,11 @@ import SessionCardTemplate from '../components/SessionCardTemplate.astro';
         cards.forEach((card) => renderDay(card, data[card.dataset.day!]));
         document.querySelector('#day-list')?.removeAttribute('hidden');
         if (status) status.hidden = true;
+        // Restore shared day links once the asynchronously loaded programme is visible.
+        const initialTarget = window.location.hash === '#day-navigation'
+          ? document.getElementById('day-navigation')
+          : cards.find((card) => `#${card.id}` === window.location.hash);
+        initialTarget?.scrollIntoView({ behavior: 'instant' });
       })
       .catch((error) => {
         if (status) status.textContent = 'Sessions are unavailable right now. Please try again later.';
