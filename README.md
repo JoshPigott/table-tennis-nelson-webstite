@@ -21,4 +21,13 @@ Strapi stores edits in its database (`cms/.tmp/data.db` locally), which is not c
 
 Photos are kept with the website files and aren't editable through this site's Strapi CMS.
 
+## Deployment
+
+Railway builds the connected GitHub branch using the Dockerfile. The website and
+Strapi share one service; the database and uploads persist on its `/data` volume.
+Keep application secrets in Railway variables, outside Git.
+
+- Website: <https://table-tennis-nelson-production.up.railway.app/>
+- Strapi: <https://table-tennis-nelson-production.up.railway.app/admin>
+
 Stop Strapi before switching Git branches. You can switch back without making a database copy if you do not start Strapi on the other branch. If you plan to start Strapi on a branch that adds, removes, or changes content types, copy `cms/.tmp/data.db` first; Strapi may change the database tables to match that branch.
